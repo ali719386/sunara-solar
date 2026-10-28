@@ -2,6 +2,7 @@
 // without touching components. Keep stats, rating and testimonial in line with real company data.
 
 export type PropertyType = "Home" | "Business" | "Industry";
+export type ProjectType = PropertyType | "Carport";
 export type ServiceType = "Installation" | "Maintenance" | "Repair";
 
 export const brand = {
@@ -30,6 +31,18 @@ export const images = {
   },
   serviceInstall: { src: "/images/services-2-install.webp", alt: "Installer in orange workwear checking plans beside rooftop solar panels" },
   serviceMaintenance: { src: "/images/services-3-maintenance.webp", alt: "Technician cleaning rooftop solar panels with a long brush" },
+  packagesHero: {
+    src: "/images/packages-hero.webp",
+    alt: "Modern stone home with a rooftop solar array overlooking the sea at sunset",
+    position: "100% 50%", // crop from the left only, so the sun on the right edge stays in frame
+  },
+  projectsHero: { src: "/images/Home.png", alt: "Stone country home with black solar panels on its tiled roof, a pool and lavender garden in front" },
+  projectFamilyRooftop: { src: "/images/family rooftop.png", alt: "Family relaxing on a rooftop terrace beside a flat-roof solar array at sunset" },
+  projectTiledRoof: { src: "/images/tiled roof solar.png", alt: "Black solar panels on a terracotta tiled roof of a Mediterranean-style home" },
+  projectOffice: { src: "/images/office building solar.png", alt: "Aerial view of a modern office building with rows of solar panels on its flat roof" },
+  projectWarehouse: { src: "/images/warehouse rooftop solar.png", alt: "Large warehouse with a rooftop solar array and trucks at the loading docks" },
+  projectMaintenance: { src: "/images/panel maintenance.png", alt: "Technicians in hard hats cleaning and inspecting rooftop solar panels" },
+  projectCarports: { src: "/images/office .png", alt: "Modern office tower at sunset with solar carports in the landscaped grounds beside it" },
   serviceRepair: { src: "/images/services-4-repair.webp", alt: "Gloved hands holding a wrench over a solar panel during repair" },
 };
 
@@ -391,6 +404,7 @@ export const servicesPage = {
     eyebrow: "Why our team",
     title: "Care you can see",
     accent: "on every visit",
+    text: "Every job is handled by our own technicians, with the same standards on every roof",
     items: [
       { icon: "team", title: "Trained installers", text: "Our own technicians do the work, not unknown subcontractors" },
       { icon: "safety", title: "Safety first", text: "Proper protection, earthing and safe working at height on every job" },
@@ -424,10 +438,23 @@ export const servicesPage = {
   } satisfies FaqData,
 };
 
-// Monthly bill a system size suits, using the same assumptions as the savings estimator
-// (Rs 50 per unit, ~135 units per kW per month).
-export function billForKw(kw: number) {
-  return Math.round((kw * 135 * 50) / 1000) * 1000;
+/* Packages page pricing is shown in US dollars. */
+export const usd = {
+  locale: "en-US",
+  // Assumed electricity tariff used for the bill estimates on the packages page.
+  perUnit: 0.18,
+};
+const usdFormat = new Intl.NumberFormat(usd.locale, { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+export function formatUsd(n: number) {
+  return usdFormat.format(n);
+}
+// Monthly units a system produces (~135 kWh per kW, same as the savings estimator).
+export function unitsForKw(kw: number) {
+  return kw * 135;
+}
+// Monthly bill (USD) a system size can offset, rounded to the nearest $5.
+export function usdBillForKw(kw: number) {
+  return Math.round((unitsForKw(kw) * usd.perUnit) / 5) * 5;
 }
 
 export const packagesPage = {
@@ -437,17 +464,25 @@ export const packagesPage = {
     title: "Find the system size",
     accent: "that fits your bill",
     text: "Every package is designed, installed and supported by our own team. Final sizing is confirmed after a free roof assessment",
+    image: images.packagesHero,
   },
-  billLabel: "Suits monthly bills up to",
-  unitsLabel: "units generated per month (approx.)",
-  includedLabel: "Included",
-  // Leave price empty to show "Get a custom quote".
-  priceOnRequest: "Get a custom quote",
+  // Leave a price empty to show "Custom quote". Example: price: "$4,900".
+  priceLabel: "Pricing",
+  priceOnRequest: "Custom quote",
+  priceNote: "Based on your roof and usage",
+  billLabel: "Covers monthly bills up to",
+  unitsLabel: "Generates per month",
+  unitsSuffix: "kWh",
+  includedLabel: "What’s included",
   cta: "Get this package",
-  items: [
+  // Each card has its own header colour: "sky", "royal" or "teal".
+  residential: [
     {
       kw: 3,
-      name: "Starter Home",
+      tone: "sky",
+      tag: "Package 01 · Starter",
+      cta: "Get the Starter package",
+      name: "Starter",
       for: "Small homes and apartments with lights, fans and a fridge",
       price: "",
       featured: false,
@@ -455,31 +490,71 @@ export const packagesPage = {
     },
     {
       kw: 5,
-      name: "Family Home",
+      tone: "royal",
+      tag: "Package 02 · Family",
+      cta: "Get the Family package",
+      name: "Family",
       for: "Family homes running one air conditioner and daily appliances",
       price: "",
       featured: true,
-      featuredLabel: "Ideal for family homes",
-      included: ["Solar panels and mounting structure", "Inverter", "Wiring, protection and earthing", "Installation and commissioning", "Monitoring setup"],
+      featuredLabel: "Recommended",
+      included: [
+        "Solar panels and mounting structure",
+        "Inverter",
+        "Wiring, protection and earthing",
+        "Installation and commissioning",
+        "Monitoring setup",
+      ],
     },
     {
       kw: 10,
-      name: "Large Home",
+      tone: "teal",
+      tag: "Package 03 · Premium Home",
+      cta: "Get the Premium package",
+      name: "Premium Home",
       for: "Larger homes with several air conditioners or small offices",
       price: "",
       featured: false,
-      included: ["Solar panels and mounting structure", "Inverter", "Wiring, protection and earthing", "Installation and commissioning", "Monitoring setup"],
-    },
-    {
-      kw: 15,
-      plus: true,
-      name: "Business & Industry",
-      for: "Shops, offices, factories and other commercial sites",
-      price: "",
-      featured: false,
-      included: ["Site survey and custom engineering", "Commercial-grade inverters", "Structural and electrical design", "Installation and commissioning", "Monitoring and maintenance plan"],
+      included: [
+        "Solar panels and mounting structure",
+        "Inverter",
+        "Wiring, protection and earthing",
+        "Installation and commissioning",
+        "Monitoring setup",
+      ],
     },
   ],
+  business: {
+    kw: 15,
+    eyebrow: "For business & industry",
+    name: "Commercial systems from 15 kW",
+    text: "Shops, offices, factories and other commercial sites get a system engineered around their roof, load profile and operating hours",
+    included: ["Site survey and custom engineering", "Commercial-grade inverters", "Structural and electrical design", "Monitoring and maintenance plan"],
+    cta: { label: "Talk to our engineers", href: "/contact" },
+  },
+  trust: [
+    { icon: "quality", title: "Free roof assessment", text: "We confirm the right size before you commit" },
+    { icon: "install", title: "Installed by our own team", text: "No subcontractors, one team from survey to switch-on" },
+    { icon: "support", title: "Maintenance & repair support", text: "Cleaning, check-ups and repairs from the same team" },
+  ],
+  compare: {
+    eyebrow: "Compare packages",
+    title: "Side by side,",
+    accent: "at a glance",
+    recommended: "Recommended",
+    swipe: "Swipe to compare",
+    sizeRow: "System size",
+    unitsRow: "Generation per month (approx.)",
+    billRow: "Covers monthly bills up to",
+    features: [
+      "Solar panels and mounting structure",
+      "Inverter",
+      "Wiring, protection and earthing",
+      "Installation and commissioning",
+      "Monitoring setup",
+    ],
+  },
+  note: "Bill estimates assume an electricity rate of $0.18 per kWh and about 135 kWh generated per kW each month. Actual results depend on your roof, location, usage and tariff",
   help: {
     title: "Not sure which size you need?",
     text: "Move the slider in our savings calculator to see a recommended system size for your monthly bill",
@@ -494,16 +569,18 @@ export const projectsPage = {
     title: "Solar systems we’ve",
     accent: "brought to life",
     text: "A look at installations completed by our team for homes, businesses and industry",
+    image: images.projectsHero,
   },
-  filters: ["All", "Home", "Business", "Industry"] as const,
+  filters: ["All", "Home", "Business", "Industry", "Carport"] as const,
   // TODO: replace these placeholders with real projects (photo, location, size).
   // Leave location or size empty to hide them.
   items: [
-    { title: "Family home rooftop", type: "Home" as PropertyType, location: "", size: "", image: images.residential },
-    { title: "Tiled roof installation", type: "Home" as PropertyType, location: "", size: "", image: images.hero },
-    { title: "Office building system", type: "Business" as PropertyType, location: "", size: "", image: images.commercial },
-    { title: "Warehouse rooftop array", type: "Industry" as PropertyType, location: "", size: "", image: images.industry },
-    { title: "Panel maintenance visit", type: "Home" as PropertyType, location: "", size: "", image: images.benefits },
+    { title: "Family home rooftop", type: "Home" as PropertyType, location: "", size: "", image: images.projectFamilyRooftop },
+    { title: "Tiled roof installation", type: "Home" as PropertyType, location: "", size: "", image: images.projectTiledRoof },
+    { title: "Office building system", type: "Business" as PropertyType, location: "", size: "", image: images.projectOffice },
+    { title: "Warehouse rooftop array", type: "Industry" as PropertyType, location: "", size: "", image: images.projectWarehouse },
+    { title: "Panel maintenance visit", type: "Home" as PropertyType, location: "", size: "", image: images.projectMaintenance },
+    { title: "Shaded parking with solar canopies", type: "Carport" as ProjectType, location: "", size: "", image: images.projectCarports },
   ],
   empty: "No projects in this category yet",
 };

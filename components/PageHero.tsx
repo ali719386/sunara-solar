@@ -13,12 +13,19 @@ type Props = {
   image?: { src: string; alt: string; position?: string };
   primary?: { label: string; href: string };
   secondary?: { label: string; href: string };
+  /** Centre the copy (used for pricing-style pages without a photo). */
+  centered?: boolean;
+  /** Optional content layered over the photo (e.g. a glass info card). */
+  overlay?: React.ReactNode;
 };
 
 /** Header for inner pages: breadcrumb, eyebrow, headline with accent, intro and optional photo. */
-export function PageHero({ crumb, eyebrow, title, accent, text, image, primary, secondary }: Props) {
+export function PageHero({ crumb, eyebrow, title, accent, text, image, primary, secondary, centered, overlay }: Props) {
   return (
-    <section className={`page-hero container ${image ? "has-image" : ""}`} aria-labelledby="page-title">
+    <section
+      className={`page-hero container ${image ? "has-image" : ""} ${centered ? "is-centered" : ""}`}
+      aria-labelledby="page-title"
+    >
       <div className="page-hero-copy" data-reveal>
         <nav className="crumbs" aria-label="Breadcrumb">
           <a href="/">Home</a>
@@ -59,6 +66,7 @@ export function PageHero({ crumb, eyebrow, title, accent, text, image, primary, 
             className="page-hero-img"
             style={image.position ? { objectPosition: image.position } : undefined}
           />
+          {overlay}
         </div>
       )}
     </section>

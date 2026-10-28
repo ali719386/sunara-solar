@@ -1,14 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Anton, Inter } from "next/font/google";
+import { Anton, Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { MotionProvider } from "@/components/MotionProvider";
 
-// Anton is kept only for the logo and the hero SOLAR lettering; all text uses Inter.
 const anton = Anton({ weight: "400", subsets: ["latin"], variable: "--font-anton", display: "swap" });
-const inter = Inter({
-  weight: ["400", "500", "600", "700"],
+const inter = Inter({ weight: ["400", "500", "600"], subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const playfair = Playfair_Display({
+  weight: "500",
+  style: "italic",
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-playfair",
   display: "swap",
 });
 
@@ -33,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       data-theme="light"
       data-motion="on"
       suppressHydrationWarning
-      className={`${anton.variable} ${inter.variable}`}
+      className={`${anton.variable} ${inter.variable} ${playfair.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />

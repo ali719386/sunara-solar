@@ -81,23 +81,28 @@ export default function ServicesPage() {
       <Process />
 
       <section className="section container" aria-labelledby="why-title">
-        <div className="section-head" data-reveal>
-          <Eyebrow>{why.eyebrow}</Eyebrow>
-          <h2 id="why-title" className="section-title">
-            {why.title} <Accent>{why.accent}</Accent>
-          </h2>
+        <div className="why-panel" data-reveal>
+          <div className="why-head">
+            <Eyebrow>{why.eyebrow}</Eyebrow>
+            <h2 id="why-title" className="section-title">
+              {why.title} <Accent>{why.accent}</Accent>
+            </h2>
+            <p className="section-text">{why.text}</p>
+          </div>
+          <ul className="why-list">
+            {why.items.map((f) => (
+              <li key={f.title} className="why-item">
+                <span className="why-icon">
+                  <FeatureIcon name={f.icon} />
+                </span>
+                <div>
+                  <h3 className="why-title">{f.title}</h3>
+                  <p className="why-text">{f.text}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul className="feature-grid">
-          {why.items.map((f, i) => (
-            <li key={f.title} className="feature-card" data-reveal style={{ "--d": `${i * 90}ms` } as React.CSSProperties}>
-              <span className="benefit-icon">
-                <FeatureIcon name={f.icon} />
-              </span>
-              <h3 className="feature-title">{f.title}</h3>
-              <p className="feature-text">{f.text}</p>
-            </li>
-          ))}
-        </ul>
       </section>
 
       <Faq data={servicesPage.faq} />
