@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { useMotion } from "./MotionProvider";
@@ -78,6 +79,13 @@ export function Button({ href, children, variant = "primary", arrow = "up-right"
     </>
   );
 
+  if (href?.startsWith("/")) {
+    return (
+      <Link ref={ref as React.Ref<HTMLAnchorElement>} href={href} className={cls} onClick={onClick} aria-label={ariaLabel}>
+        {inner}
+      </Link>
+    );
+  }
   if (href) {
     return (
       <a ref={ref as React.Ref<HTMLAnchorElement>} href={href} className={cls} onClick={onClick} aria-label={ariaLabel}>

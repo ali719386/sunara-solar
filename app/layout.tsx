@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Anton, Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { MotionProvider } from "@/components/MotionProvider";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 
 const anton = Anton({ weight: "400", subsets: ["latin"], variable: "--font-anton", display: "swap" });
 const inter = Inter({ weight: ["400", "500", "600"], subsets: ["latin"], variable: "--font-inter", display: "swap" });
@@ -14,7 +16,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "SUNARA — Premium solar for homes, businesses and industry",
+  title: "SUNARA - Premium solar for homes, businesses and industry",
   description:
     "High performance solar for homes, businesses and industry. Free roof assessment, custom design, expert installation and monitoring.",
 };
@@ -33,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       data-theme="light"
       data-motion="on"
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
       className={`${anton.variable} ${inter.variable} ${playfair.variable}`}
     >
@@ -40,7 +43,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
       </head>
       <body>
-        <MotionProvider>{children}</MotionProvider>
+        <MotionProvider>
+          <a href="#main" className="skip-link">
+            Skip to content
+          </a>
+          {/* Shared across pages, so they stay mounted during client-side navigation. */}
+          <Navbar />
+          {children}
+          <Footer />
+        </MotionProvider>
       </body>
     </html>
   );

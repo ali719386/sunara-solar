@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import { Eyebrow } from "./Eyebrow";
@@ -17,18 +18,20 @@ type Props = {
   centered?: boolean;
   /** Optional content layered over the photo (e.g. a glass info card). */
   overlay?: React.ReactNode;
+  /** Extra class on the section, for page-specific tweaks. */
+  className?: string;
 };
 
 /** Header for inner pages: breadcrumb, eyebrow, headline with accent, intro and optional photo. */
-export function PageHero({ crumb, eyebrow, title, accent, text, image, primary, secondary, centered, overlay }: Props) {
+export function PageHero({ crumb, eyebrow, title, accent, text, image, primary, secondary, centered, overlay, className = "" }: Props) {
   return (
     <section
-      className={`page-hero container ${image ? "has-image" : ""} ${centered ? "is-centered" : ""}`}
+      className={`page-hero container ${image ? "has-image" : ""} ${centered ? "is-centered" : ""} ${className}`}
       aria-labelledby="page-title"
     >
       <div className="page-hero-copy" data-reveal>
         <nav className="crumbs" aria-label="Breadcrumb">
-          <a href="/">Home</a>
+          <Link href="/">Home</Link>
           <ChevronRight size={14} aria-hidden="true" />
           <span aria-current="page">{crumb}</span>
         </nav>

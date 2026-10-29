@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { solutions } from "@/lib/content";
 import { Eyebrow } from "./Eyebrow";
 import { Accent } from "./Accent";
@@ -18,9 +19,9 @@ export function Solutions() {
         </div>
         <div>
           <p className="section-text">{solutions.text}</p>
-          <a href={solutions.more.href} className="text-link">
+          <Link href={solutions.more.href} className="text-link">
             {solutions.more.label}
-          </a>
+          </Link>
         </div>
       </div>
       <div className="bento">

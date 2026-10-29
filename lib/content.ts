@@ -23,7 +23,7 @@ export const images = {
   commercial: { src: "/images/commercial.jpg", alt: "Modern office building at sunset with solar carports beside it" },
   industry: { src: "/images/industry.jpg", alt: "Aerial view of a large logistics warehouse with a solar array across its roof" },
   benefits: { src: "/images/benefits.jpg", alt: "Close view of solar panels on a terracotta tiled roof" },
-  // Services page, numbered in display order (1 = hero, 2–4 = service blocks).
+  // Services page, numbered in display order (1 = hero, 2-4 = service blocks).
   servicesHero: {
     src: "/images/services-1-hero.webp",
     alt: "Technicians in hard hats and safety vests inspecting a solar panel array",
@@ -32,9 +32,9 @@ export const images = {
   serviceInstall: { src: "/images/services-2-install.webp", alt: "Installer in orange workwear checking plans beside rooftop solar panels" },
   serviceMaintenance: { src: "/images/services-3-maintenance.webp", alt: "Technician cleaning rooftop solar panels with a long brush" },
   packagesHero: {
-    src: "/images/packages-hero.webp",
-    alt: "Modern stone home with a rooftop solar array overlooking the sea at sunset",
-    position: "100% 50%", // crop from the left only, so the sun on the right edge stays in frame
+    src: "/images/packages-hero-home.webp",
+    alt: "White family home with black solar panels across its tiled roof, a patio and green lawn in front",
+    position: "45% 50%", // keeps the roof array and front of the house centred when cropped
   },
   projectsHero: { src: "/images/Home.png", alt: "Stone country home with black solar panels on its tiled roof, a pool and lavender garden in front" },
   projectFamilyRooftop: { src: "/images/family rooftop.png", alt: "Family relaxing on a rooftop terrace beside a flat-roof solar array at sunset" },
@@ -43,6 +43,7 @@ export const images = {
   projectWarehouse: { src: "/images/warehouse rooftop solar.png", alt: "Large warehouse with a rooftop solar array and trucks at the loading docks" },
   projectMaintenance: { src: "/images/panel maintenance.png", alt: "Technicians in hard hats cleaning and inspecting rooftop solar panels" },
   projectCarports: { src: "/images/office .png", alt: "Modern office tower at sunset with solar carports in the landscaped grounds beside it" },
+  aboutHero: { src: "/images/about-hero.png", alt: "Modern stone home with rooftop solar panels above a wooded coastline at sunset" },
   serviceRepair: { src: "/images/services-4-repair.webp", alt: "Gloved hands holding a wrench over a solar panel during repair" },
 };
 
@@ -54,10 +55,10 @@ export const heroRoofClip =
 export const nav = {
   links: [
     { label: "Home", href: "/" },
+    { label: "About", href: "/about" },
     { label: "Services", href: "/services" },
     { label: "Packages", href: "/packages" },
     { label: "Projects", href: "/projects" },
-    { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
   ],
   cta: { label: "Get a Free Quote", compact: "Quote", href: "/contact" },
@@ -66,11 +67,11 @@ export const nav = {
 // Browser titles and descriptions for each page.
 export const pageMeta = {
   services: {
-    title: "Solar Services — Installation, Maintenance & Repair | SUNARA",
+    title: "Solar Services - Installation, Maintenance & Repair | SUNARA",
     description: "Our own team installs, cleans, maintains and repairs solar systems for homes, businesses and industry.",
   },
   packages: {
-    title: "Solar Packages — 3 kW to 15 kW+ | SUNARA",
+    title: "Solar Packages - 3 kW to 15 kW+ | SUNARA",
     description: "Compare solar system sizes and find the package that fits your monthly electricity bill.",
   },
   projects: {
@@ -125,7 +126,7 @@ export const solutions = {
     {
       id: "home",
       property: "Home" as PropertyType,
-      label: "01 / For homes",
+      label: "For homes",
       title: "Save more, live greener",
       text: "More comfort, less dependence on the grid",
       image: images.residential,
@@ -133,7 +134,7 @@ export const solutions = {
     {
       id: "business",
       property: "Business" as PropertyType,
-      label: "02 / For businesses",
+      label: "For businesses",
       title: "Power your growth",
       text: "Put your roof to work for your business",
       image: images.commercial,
@@ -141,7 +142,7 @@ export const solutions = {
     {
       id: "industry",
       property: "Industry" as PropertyType,
-      label: "03 / For industry",
+      label: "For industry",
       title: "Big roofs, bigger possibilities",
       text: "Energy designed around your operation",
       image: images.industry,
@@ -355,7 +356,6 @@ export const servicesPage = {
       id: "installation",
       service: "Installation" as ServiceType,
       icon: "install",
-      n: "01",
       title: "Solar installation",
       text: "From the first roof survey to switching your system on, our installation team handles every step on site, safely and neatly",
       included: [
@@ -371,7 +371,6 @@ export const servicesPage = {
       id: "maintenance",
       service: "Maintenance" as ServiceType,
       icon: "clean",
-      n: "02",
       title: "Maintenance & cleaning",
       text: "Dust and wear slowly reduce output. Regular cleaning and check-ups keep your panels producing as much power as they can",
       included: [
@@ -387,7 +386,6 @@ export const servicesPage = {
       id: "repair",
       service: "Repair" as ServiceType,
       icon: "repair",
-      n: "03",
       title: "Repair & support",
       text: "If output drops or something stops working, our technicians find the fault and fix it, whether we installed the system or not",
       included: [
@@ -486,7 +484,13 @@ export const packagesPage = {
       for: "Small homes and apartments with lights, fans and a fridge",
       price: "",
       featured: false,
-      included: ["Solar panels and mounting structure", "Inverter", "Wiring, protection and earthing", "Installation and commissioning"],
+      included: [
+        "Solar panels and mounting structure",
+        "Inverter",
+        "Wiring, protection and earthing",
+        "Installation and commissioning",
+        "Monitoring setup",
+      ],
     },
     {
       kw: 5,
@@ -603,6 +607,19 @@ export const aboutPage = {
       "SUNARA started with a simple idea: solar should be clear, reliable and properly looked after. Too many systems are installed and then forgotten, losing output to dust, loose wiring or faults nobody notices.",
       "That is why we handle everything ourselves, from the first roof survey to installation, cleaning and repairs. Our customers always know who to call, and our team takes responsibility for the work it does.",
     ],
+    // TODO: confirm milestones against company history.
+    milestones: [
+      { year: "2011", label: "Founded" },
+      { year: "2016", label: "50 MW" },
+      { year: "2021", label: "Live monitoring" },
+      { year: "Today", label: "10K+ homes" },
+    ],
+  },
+  banner: { word: "ABOUT", crumb: "About us" },
+  experience: { value: "15+", label: "Years of engineering experience" },
+  mission: {
+    eyebrow: "Our mission",
+    quote: "To make clean energy the easiest decision a family or a business ever makes.",
   },
   values: {
     eyebrow: "What we stand for",
@@ -672,5 +689,54 @@ export const contact = {
       email: "Please enter a valid email address",
       phone: "Please enter a valid phone number",
     },
+    intro: "Takes about a minute. No spam, no pressure.",
+    city: "City",
+    optional: "optional",
+    namePlaceholder: "e.g. Ali Khan",
+    phonePrefix: "+92",
+    phonePlaceholder: "300 1234567",
+    emailPlaceholder: "you@example.com",
+    cityPlaceholder: "e.g. Lahore",
+    cities: ["Karachi", "Lahore", "Islamabad", "Rawalpindi", "Faisalabad", "Multan", "Peshawar", "Quetta", "Sialkot", "Gujranwala", "Hyderabad"],
+    successTitle: "Thank you,",
+    successAccent: "we've got it",
+    successText: "A solar advisor will call you within 24 hours to confirm a time for your free roof assessment.",
+    again: "Send another message",
+    perks: ["A reply within 24 hours", "Free roof assessment", "Clear sizing and pricing", "No obligation, no pressure"],
+  },
+  quick: { phone: "Call us", whatsapp: "WhatsApp", email: "Email us" },
+  advisor: {
+    initials: "SR",
+    title: "Talk to a solar advisor",
+    open: "Open now, replying in minutes",
+    closed: "Closed now, we will reply next working day",
+    whatsappValue: "Chat with us",
+  },
+  // TODO: confirm real opening hours. days: 0 = Sunday ... 6 = Saturday, times in 24h.
+  openingHours: {
+    eyebrow: "Opening hours",
+    rows: [
+      { label: "Monday to Friday", value: "9:00 am to 6:00 pm", days: [1, 2, 3, 4, 5], open: "09:00", close: "18:00" },
+      { label: "Saturday", value: "10:00 am to 4:00 pm", days: [6], open: "10:00", close: "16:00" },
+      { label: "Sunday", value: "Closed", days: [0], open: "", close: "" },
+    ],
+  },
+  cta: {
+    eyebrow: "Ready when you are",
+    title: "Don't just install solar,",
+    accent: "do it properly.",
+    text: "Speak to an advisor today and get a clear, honest plan for your roof.",
+    button: "Talk to our team",
+    secondary: "Fill in the form",
+  },
+  servicesStrip: {
+    label: "What we do",
+    items: [
+      { icon: "install", label: "Installation", href: "/services" },
+      { icon: "clean", label: "Cleaning", href: "/services" },
+      { icon: "repair", label: "Repair", href: "/services" },
+      { icon: "design", label: "Solar packages", href: "/packages" },
+      { icon: "team", label: "Commercial", href: "/packages" },
+    ],
   },
 };

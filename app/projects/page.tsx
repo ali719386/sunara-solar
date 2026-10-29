@@ -10,7 +10,7 @@ export const metadata: Metadata = pageMeta.projects;
 export default function ProjectsPage() {
   return (
     <PageShell>
-      <PageHero {...projectsPage.hero} />
+      <PageHero {...projectsPage.hero} className="page-hero-lg-meta" />
       <section className="section section-tight container" aria-label="Project gallery">
         <ProjectsGallery />
       </section>

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
@@ -59,21 +60,21 @@ export function Navbar() {
   return (
     <header className={`nav-wrap ${scrolled ? "is-scrolled" : ""}`}>
       <nav className="nav" aria-label="Primary">
-        <a href="/" className="nav-logo" aria-label="SUNARA home">
+        <Link href="/" className="nav-logo" aria-label="SUNARA home">
           <Logo />
-        </a>
+        </Link>
         <ul className="nav-links">
           {nav.links.map((l) => {
             const current = isActive(pathname, l.href);
             return (
               <li key={l.href}>
-                <a
+                <Link
                   href={l.href}
                   className={`nav-link ${current ? "is-active" : ""}`}
                   aria-current={current ? "page" : undefined}
                 >
                   {l.label}
-                </a>
+                </Link>
               </li>
             );
           })}
@@ -103,21 +104,21 @@ export function Navbar() {
             const current = isActive(pathname, l.href);
             return (
               <li key={l.href}>
-                <a
+                <Link
                   href={l.href}
                   className={current ? "is-active" : undefined}
                   aria-current={current ? "page" : undefined}
                   onClick={() => setOpen(false)}
                 >
                   {l.label}
-                </a>
+                </Link>
               </li>
             );
           })}
           <li>
-            <a href={nav.cta.href} className="nav-dropdown-cta" onClick={() => setOpen(false)}>
+            <Link href={nav.cta.href} className="nav-dropdown-cta" onClick={() => setOpen(false)}>
               {nav.cta.label}
-            </a>
+            </Link>
           </li>
         </ul>
       </div>

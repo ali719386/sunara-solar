@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowRight, Calculator, Check, Minus } from "lucide-react";
 import { formatUsd, packagesPage, pageMeta, unitsForKw, usdBillForKw } from "@/lib/content";
@@ -187,10 +188,10 @@ export default function PackagesPage() {
               <h2 className="package-help-title">{p.help.title}</h2>
               <p className="package-help-text">{p.help.text}</p>
             </div>
-            <a href={p.help.link.href} className="text-link package-help-link">
+            <Link href={p.help.link.href} className="text-link package-help-link">
               {p.help.link.label}
               <ArrowRight size={15} aria-hidden="true" />
-            </a>
+            </Link>
           </div>
         </div>
       </section>

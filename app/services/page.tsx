@@ -48,9 +48,6 @@ export default function ServicesPage() {
                   sizes="(max-width: 900px) 100vw, 50vw"
                   className="service-img"
                 />
-                <span className="service-num" aria-hidden="true">
-                  {s.n}
-                </span>
               </div>
               <div className="service-copy" data-reveal style={{ "--d": "100ms" } as React.CSSProperties}>
                 <span className="service-icon">
