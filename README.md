@@ -35,7 +35,7 @@ All copy, figures, currency, images and testimonials live in `lib/content.ts`. F
 
 ## Quote form
 
-Front-end demo only — nothing is transmitted or stored. See the `TODO` in `components/QuoteForm.tsx` for API integration.
+Front-end demo only - nothing is transmitted or stored. See the `TODO` in `components/QuoteForm.tsx` for API integration.
 
 ## Motion
 
