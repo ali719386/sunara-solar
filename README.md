@@ -39,5 +39,5 @@ Front-end demo only - nothing is transmitted or stored. See the `TODO` in `compo
 
 ## Motion
 
-- `html[data-motion="on|off"]` — set before paint from `localStorage` (`sunara-motion`) and `prefers-reduced-motion`, then managed by `MotionProvider`. "Off" collapses all animations/transitions to their final state.
+- `html[data-motion="on|off"]` - set before paint from `localStorage` (`sunara-motion`) and `prefers-reduced-motion`, then managed by `MotionProvider`. "Off" collapses all animations/transitions to their final state.
 - Theme: `html[data-theme]`, persisted in `localStorage` (`sunara-theme`), defaults to light.
