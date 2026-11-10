@@ -55,6 +55,8 @@ export function Hero() {
             fill
             priority
             sizes="100vw"
+            placeholder="blur"
+            blurDataURL={img.blur}
             className="hero-img"
           />
           <div className="hero-word-wrap" ref={wordRef} aria-hidden="true">

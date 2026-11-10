@@ -44,8 +44,9 @@ export default function ServicesPage() {
                   src={s.image.src}
                   alt={s.image.alt}
                   fill
-                  quality={90}
                   sizes="(max-width: 900px) 100vw, 50vw"
+                  placeholder="blur"
+                  blurDataURL={s.image.blur}
                   className="service-img"
                 />
               </div>

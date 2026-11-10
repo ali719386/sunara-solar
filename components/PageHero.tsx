@@ -11,7 +11,7 @@ type Props = {
   title: string;
   accent?: string;
   text: string;
-  image?: { src: string; alt: string; position?: string };
+  image?: { src: string; alt: string; blur?: string; position?: string };
   primary?: { label: string; href: string };
   secondary?: { label: string; href: string };
   /** Centre the copy (used for pricing-style pages without a photo). */
@@ -64,8 +64,9 @@ export function PageHero({ crumb, eyebrow, title, accent, text, image, primary, 
             alt={image.alt}
             fill
             priority
-            quality={90}
             sizes="(max-width: 900px) 100vw, 46vw"
+            placeholder={image.blur ? "blur" : "empty"}
+            blurDataURL={image.blur}
             className="page-hero-img"
             style={image.position ? { objectPosition: image.position } : undefined}
           />

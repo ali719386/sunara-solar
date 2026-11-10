@@ -30,8 +30,9 @@ export default function AboutPage() {
               alt={images.aboutHero.alt}
               fill
               priority
-              quality={90}
               sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images.aboutHero.blur}
               className="ab-banner-img"
             />
             <div className="ab-banner-word" aria-hidden="true">

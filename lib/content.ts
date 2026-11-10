@@ -18,36 +18,36 @@ export const currency = {
 export const images = {
   // Transparent, trimmed version of /images/logo.webp (white background removed).
   logo: { src: "/images/logo-mark.png", width: 172, height: 88 },
-  hero: { src: "/images/hero.jpg", width: 1672, height: 941, alt: "Terracotta roof with black solar panels under a bright blue sky, green countryside beyond" },
-  residential: { src: "/images/residential.jpg", alt: "Stone family home with black solar panels on a tiled roof, garden and pool in front" },
-  commercial: { src: "/images/commercial.jpg", alt: "Modern office building at sunset with solar carports beside it" },
-  industry: { src: "/images/industry.jpg", alt: "Aerial view of a large logistics warehouse with a solar array across its roof" },
-  benefits: { src: "/images/benefits.jpg", alt: "Close view of solar panels on a terracotta tiled roof" },
+  hero: { src: "/images/hero.webp", blur: "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAQAgCdASoQAAkAA4BaJbACdAELzmxDIsNAAP7gz8NCXUvb8Uy7XXs9oeM+h5pjZuNrkGRAMw5p6oR5qu9YvwNybkOImgZ/XEjxmGe1XCX+3mRKSnAAAA==", width: 1672, height: 941, alt: "Terracotta roof with black solar panels under a bright blue sky, green countryside beyond" },
+  residential: { src: "/images/residential.webp", blur: "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADQAQCdASoQAAsAA4BaJaACdAD0oQQN8AD+8hNTRIloCN7lRj2rQCsE9/ljB7KYhW77XUoJD3MTscs0fk9B5h08pfhFUDhx3hhNZMthzL7Q0QkVFbbrlXAA", alt: "Stone family home with black solar panels on a tiled roof, garden and pool in front" },
+  commercial: { src: "/images/commercial.jpg", blur: "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADwAQCdASoQAAkAA4BaJQBOgCMCLScSLgAA/DNUsTuveMI5v5P4DkTAZ/zeG18VgNaYdwS9Rm5HrUhAbLkZ1PUY3LvfF3MNtwAAAA==", alt: "Modern office building at sunset with solar carports beside it" },
+  industry: { src: "/images/industry.jpg", blur: "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAQCdASoQAAgAA4BaJZACdAEOJM8AAADN88ayMjmIa8fb1HYJ53gfyAvQg1RncsL1yOS87ujSNZCEPDF9rgN1Wp7ohcwAAAA=", alt: "Aerial view of a large logistics warehouse with a solar array across its roof" },
+  benefits: { src: "/images/benefits.jpg", blur: "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAAAwBACdASoQABQAPu1iqU2ppaOiMAgBMB2JbACdMoR3ACmV/XxXCtQetIAA/lmYJa4azaDAyf/c68U8/E8qp/foY7Edc9VHMXFP+DSvEzW4aruCgyuHZsbsvIJg3wW58c4A3hmf4lKB7UpaIsaxX8mmJC2UEEQoZw0hppQpfWqZqKnV7h5u+BUAAAA=", alt: "Close view of solar panels on a terracotta tiled roof" },
   // Services page, numbered in display order (1 = hero, 2-4 = service blocks).
   servicesHero: {
-    src: "/images/services-1-hero.webp",
+    src: "/images/services-1-hero.webp", blur: "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADwAQCdASoQAAkAA4BaJagCdADhRuOuUAAA/uuL6f5uHA+Uno/OgJNaHaFiJatLAgCc3LJvJZZP2u/3LI+FI/jTGFT4IPigBkOij3yHNbbS5+D0f62pWyiltXdIwSKsj8wAAA==",
     alt: "Technicians in hard hats and safety vests inspecting a solar panel array",
     position: "80% 50%", // keeps all three technicians in frame when cropped
   },
-  serviceInstall: { src: "/images/services-2-install.webp", alt: "Installer in orange workwear checking plans beside rooftop solar panels" },
-  serviceMaintenance: { src: "/images/services-3-maintenance.webp", alt: "Technician cleaning rooftop solar panels with a long brush" },
+  serviceInstall: { src: "/images/services-2-install.webp", blur: "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADQAQCdASoQAAkAA4BaJZACdAClPFQkAAD+n5m7dPNdhWFNwHul9upWF22yxyS0a6CoVpG/JHusgXmL7vSp6cUzKidCTDXoxlLLMjLi1iFvxzYAAAA=", alt: "Installer in orange workwear checking plans beside rooftop solar panels" },
+  serviceMaintenance: { src: "/images/services-3-maintenance.webp", blur: "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQAgCdASoQAAsAA4BaJagCdAEQdo8Ria+wAP7hl2hGahiUqFr1GUdc345XkdADJAsDuHadorQpUZ2cb4/TW7kvnbbiJbJlyDrrd1niPf7nAtAWAIPewE21v/2dLWjgbagAAA==", alt: "Technician cleaning rooftop solar panels with a long brush" },
   packagesHero: {
-    src: "/images/packages-hero-home.webp",
+    src: "/images/packages-hero-home.webp", blur: "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAABwAgCdASoQAA0AA4BaJbACdGuAD0JvslIdfb4uAP5ocALiWlbXK29Vp5ftxjBZffZrbCD89nvdQ0jTkUtF3uhzzzbOIdkZRLIdVNKhjscwEv0OjDMy3u9wdApFvb6GH1XRSyiKGQZAAA==",
     alt: "White family home with black solar panels across its tiled roof, a patio and green lawn in front",
     position: "45% 50%", // keeps the roof array and front of the house centred when cropped
   },
-  projectsHero: { src: "/images/Home.png", alt: "Stone country home with black solar panels on its tiled roof, a pool and lavender garden in front" },
-  projectFamilyRooftop: { src: "/images/family rooftop.png", alt: "Family relaxing on a rooftop terrace beside a flat-roof solar array at sunset" },
-  projectTiledRoof: { src: "/images/tiled roof solar.png", alt: "Black solar panels on a terracotta tiled roof of a Mediterranean-style home" },
-  projectOffice: { src: "/images/office building solar.png", alt: "Aerial view of a modern office building with rows of solar panels on its flat roof" },
-  projectWarehouse: { src: "/images/warehouse rooftop solar.png", alt: "Large warehouse with a rooftop solar array and trucks at the loading docks" },
-  projectMaintenance: { src: "/images/panel maintenance.png", alt: "Technicians in hard hats cleaning and inspecting rooftop solar panels" },
-  projectCarports: { src: "/images/office .png", alt: "Modern office tower at sunset with solar carports in the landscaped grounds beside it" },
-  aboutHero: { src: "/images/about-hero.png", alt: "Modern stone home with rooftop solar panels above a wooded coastline at sunset" },
-  serviceRepair: { src: "/images/services-4-repair.webp", alt: "Gloved hands holding a wrench over a solar panel during repair" },
+  projectsHero: { src: "/images/projects-hero.webp", blur: "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADQAQCdASoQAAsAA4BaJaACdAD0oQQN8AD+8hNTRIloCN7lRj2rQCsE9/ljB7KYhW77XUoJD3MTscs0fk9B5h08pfhFUDhx3hhNZMthzL7Q0QkVFbbrlXAA", alt: "Stone country home with black solar panels on its tiled roof, a pool and lavender garden in front" },
+  projectFamilyRooftop: { src: "/images/project-family-rooftop.webp", blur: "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADwAQCdASoQAAkAA4BaJZgCdAEU9ZTepmgA+/yGY+8fnNNXUtWc0nByDGvI7+cgCOkqChLK6dDBhr/d/R+MH4zTB9B87RXB/o5f6Yz4u5u8Iko/kX0AAA==", alt: "Family relaxing on a rooftop terrace beside a flat-roof solar array at sunset" },
+  projectTiledRoof: { src: "/images/project-tiled-roof.webp", blur: "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAQAgCdASoQAAkAA4BaJagCdAEDYZlcR0XAAP6RvzLpuoulPkIGMgU4w8jCQRpsAvBP2eSWDqXPzWOuMpN+v2+4ks2ht0weh3JbYS/j38CtmPpS96ikWO66yaAAAA==", alt: "Black solar panels on a terracotta tiled roof of a Mediterranean-style home" },
+  projectOffice: { src: "/images/project-office.webp", blur: "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAACwAQCdASoQAAkAA4BaJZACdADwkKtgAOGXMjRYsuudpcv8sRPWJTW/dKRDnSh9JWYd3WvLTao+UJWLI8c45xdGqRRiZCIo0a2gfKAAAAA=", alt: "Aerial view of a modern office building with rows of solar panels on its flat roof" },
+  projectWarehouse: { src: "/images/project-warehouse.webp", blur: "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAQAgCdASoQAAkAA4BaJQBWAMWqtfMKHLYAAPqeSjhXvNaia9I7aKfk+Cqr1n02Y0UHx8hmSvR98AtzLtnjrFIG7wT9L00HpCPAOCoyLgrDG+PVjjG4AAAA", alt: "Large warehouse with a rooftop solar array and trucks at the loading docks" },
+  projectMaintenance: { src: "/images/project-maintenance.webp", blur: "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADQAQCdASoQAAkAA4BaJQBOgCKlLv+q0AD+W/hfqRQ/iDAiGaFteJyNJy0jW1+EMXNKjL/7SKkfEURLkiRO4FjGw5zW+XkdceAQBG+S9kaKtugA", alt: "Technicians in hard hats cleaning and inspecting rooftop solar panels" },
+  projectCarports: { src: "/images/project-carports.webp", blur: "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADwAQCdASoQAAkAA4BaJQBdgCPbH0DpvUwA/DiYXhkanuUuQ2z9hedTK07/jGUDvr7ppRVlImahv/hasdc3rZBFb0uAJDhRMAAAAA==", alt: "Modern office tower at sunset with solar carports in the landscaped grounds beside it" },
+  aboutHero: { src: "/images/about-hero.webp", blur: "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAAAQAgCdASoQAAkAA4BaJaACdAEPDQTnrc7gAP4ntm8I6Hysu/YRU0m4bZrDhmDAg+I7ztUS6l7+GIMdWzfcNW0FW8PWaSHQxp+vIAyCCUO5YxAAAAA=", alt: "Modern stone home with rooftop solar panels above a wooded coastline at sunset" },
+  serviceRepair: { src: "/images/services-4-repair.webp", blur: "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAABQAgCdASoQAAkAA4BaJagCdH8AgpB+8IGnnAAA/M/f9n7WHrsHtMIfFF+nW0+KfU9nEuOV2zoUIwFziG8rbFiwW7Mw6FnLTdMbs9g0Vefix0+Q4i365dCC56ULAAAA", alt: "Gloved hands holding a wrench over a solar panel during repair" },
 };
 
-// Image-specific roof mask for /images/hero.jpg (1672 × 941), traced along the tile
+// Image-specific roof mask for /images/hero.webp (1672 × 941), traced along the tile
 // edge so letters disappear exactly at the roofline. Re-trace if the photo changes.
 export const heroRoofClip =
   "polygon(32.89% 82.47%, 51.44% 53.56%, 58.97% 41.23%, 75.36% 32.52%, 100% 18.49%, 100% 100%, 32.89% 100%)";

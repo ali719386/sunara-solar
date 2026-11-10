@@ -43,7 +43,7 @@ export function ProjectsGallery() {
           io.unobserve(el);
         }
       },
-      { rootMargin: "0px 0px -6% 0px", threshold: 0 }
+      { rootMargin: "0px 0px 8% 0px", threshold: 0 }
     );
     cards.forEach((c) => {
       if (!c.classList.contains("is-shown")) io.observe(c);
@@ -75,7 +75,7 @@ export function ProjectsGallery() {
           {items.map((p) => (
             <li key={p.title} className="project-card">
               <div className="project-media">
-                <Image src={p.image.src} alt={p.image.alt} fill sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 33vw" className="project-img" />
+                <Image src={p.image.src} alt={p.image.alt} fill placeholder="blur" blurDataURL={p.image.blur} sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 33vw" className="project-img" />
                 <span className="solution-label">{p.type}</span>
               </div>
               <div className="project-body">

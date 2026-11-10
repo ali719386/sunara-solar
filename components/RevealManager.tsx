@@ -42,7 +42,8 @@ export function RevealManager() {
           }
         }
       },
-      { rootMargin: "0px 0px -6% 0px", threshold: 0 }
+      // Start just before the element scrolls in, so fast mobile scrolling never shows a blank gap.
+      { rootMargin: "0px 0px 8% 0px", threshold: 0 }
     );
     els.forEach((el) => {
       if (!el.classList.contains("is-in") && !el.classList.contains("is-shown")) io.observe(el);

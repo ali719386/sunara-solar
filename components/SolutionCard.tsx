@@ -12,7 +12,7 @@ type Props = {
   title: string;
   text: string;
   property: PropertyType;
-  image: { src: string; alt: string };
+  image: { src: string; alt: string; blur?: string };
   large?: boolean;
   delay: number;
 };
@@ -83,6 +83,8 @@ export function SolutionCard({ label, title, text, property, image, large, delay
             alt={image.alt}
             fill
             sizes={large ? "(max-width: 760px) 100vw, 60vw" : "(max-width: 760px) 100vw, 42vw"}
+            placeholder={image.blur ? "blur" : "empty"}
+            blurDataURL={image.blur}
             className="solution-img"
           />
         </div>

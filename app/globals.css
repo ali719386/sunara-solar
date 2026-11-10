@@ -748,9 +748,9 @@ a {
 .stat-value {
   margin: 0;
   font-family: var(--font-num);
-  font-size: clamp(3rem, 5.4vw, 5rem);
+  font-size: clamp(3rem, 4vw, 4rem);
   line-height: 1;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: tabular-nums;  
 }
 .stat-suffix {
   margin-left: 0.03em;
@@ -4326,5 +4326,69 @@ html[data-motion="on"] .ct-success-icon {
 @media (max-width: 520px) {
   .ct-services ul {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ───────────────────────── Mobile performance ───────────────────────── */
+
+/* Large backdrop blurs, blurred letter entrances and endless spins are costly on phone
+   GPUs and cause scroll jank. The glass is already ~86% opaque, so a lighter blur and a
+   slightly more solid fill keep the same look. */
+@media (max-width: 760px) {
+  .glass,
+  .nav,
+  .nav-dropdown {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+  .solution-label {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: rgba(0, 0, 0, 0.42);
+  }
+  .hero-word span,
+  .ab-banner-word span {
+    animation-name: letterInLite;
+  }
+  /* Shorter reveals so images and blocks feel instant while scrolling. */
+  html[data-motion="on"] [data-reveal].is-in {
+    animation-duration: 0.45s;
+  }
+  html[data-motion="on"] :is(.solution-card, .benefits-media).is-in :is(.solution-media, .benefits-video),
+  html[data-motion="on"] .project-card.is-in .project-img {
+    animation-duration: 0.7s;
+  }
+  .cta-sun,
+  html[data-motion="on"] .ct-cta-sun {
+    animation: none;
+    will-change: auto;
+  }
+}
+/* Stat numbers: the desktop clamp never drops below 48px, which crowds the 2-column grid
+   on phones (e.g. "250MW+"). Scale with the viewport instead and tighten the label. */
+@media (max-width: 760px) {
+  .stat-value {
+    font-size: clamp(2.25rem, 10.5vw, 2.85rem);
+    letter-spacing: 0.005em;
+  }
+  .stat-suffix {
+    margin-left: 0.05em;
+    font-size: 0.58em;
+    vertical-align: 0.5em;
+  }
+  .stat-label {
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+}
+@keyframes letterInLite {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }

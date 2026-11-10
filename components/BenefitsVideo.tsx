@@ -41,7 +41,7 @@ export function BenefitsVideo({ src, poster }: { src: string; poster: string }) 
       muted
       loop
       playsInline
-      preload="metadata"
+      preload="none"
       aria-hidden="true"
       tabIndex={-1}
     />
