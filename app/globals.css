@@ -4079,6 +4079,40 @@ html[data-motion="on"] .abx-cta-sun {
   .abx-cta-actions .btn {
     width: 100%;
   }
+  /* Phones: the comparison table fits the screen instead of scrolling. Its 600px minimum
+     width made mobile browsers zoom the whole page out and scroll sideways. */
+  .abx-table {
+    min-width: 0;
+    table-layout: fixed;
+    font-size: 14px;
+  }
+  .abx-table th,
+  .abx-table td {
+    padding: 14px 10px;
+    overflow-wrap: anywhere;
+  }
+  .abx-table th:first-child {
+    width: 44%;
+    padding-left: 16px;
+  }
+  .abx-table thead th {
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    padding-inline: 6px;
+    overflow-wrap: normal;
+  }
+  .abx-table td,
+  .abx-table thead th:not(:first-child) {
+    text-align: center;
+  }
+  .abx-mark-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
 }
 @media (max-width: 560px) {
   .abx-values,

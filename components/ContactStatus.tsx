@@ -30,8 +30,6 @@ export function ContactStatus() {
   const a = contact.advisor;
   return (
     <p className={`ct-status ${open === false ? "is-closed" : ""}`} aria-live="polite">
-      {/* pkg-teal supplies the site's existing green tone (with its dark-mode variant). */}
-      <span className="ct-dot pkg-teal" aria-hidden="true" />
       <span>{open === null ? " " : open ? a.open : a.closed}</span>
     </p>
   );
