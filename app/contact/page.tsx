@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, Check, Mail, MessageCircle, Phone, PhoneCall, Sun, type LucideIcon } from "lucide-react";
+import { ArrowRight, Check, Mail, Phone, PhoneCall, Sun, type LucideIcon } from "lucide-react";
+import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { contact, pageMeta } from "@/lib/content";
 import { PageShell } from "@/components/PageShell";
 import { Eyebrow } from "@/components/Eyebrow";
@@ -9,7 +10,7 @@ import { ContactForm } from "@/components/ContactForm";
 
 export const metadata: Metadata = pageMeta.contact;
 
-type Channel = { key: string; icon: LucideIcon; quick: string; href: string; external?: boolean };
+type Channel = { key: string; icon: LucideIcon | typeof WhatsAppIcon; quick: string; href: string; external?: boolean };
 
 const delay = (ms: number) => ({ "--d": `${ms}ms` }) as React.CSSProperties;
 
@@ -21,7 +22,7 @@ export default function ContactPage() {
     d.phone && { key: "phone", icon: Phone, quick: quick.phone, href: `tel:${d.phone.replace(/\s+/g, "")}` },
     d.whatsapp && {
       key: "whatsapp",
-      icon: MessageCircle,
+      icon: WhatsAppIcon,
       quick: quick.whatsapp,
       href: `https://wa.me/${d.whatsapp}`,
       external: true,

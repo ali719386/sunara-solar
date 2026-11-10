@@ -1,7 +1,8 @@
-import { Star } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Star } from "lucide-react";
 import { about } from "@/lib/content";
 import { Eyebrow } from "./Eyebrow";
-import { StatCounter } from "./StatCounter";
+import { StatsStrip } from "./StatsStrip";
 
 export function About() {
   return (
@@ -28,13 +29,13 @@ export function About() {
             </span>
             <span className="rating-label">{about.rating.label}</span>
           </div>
+          <Link href={about.link.href} className="text-link about-link">
+            {about.link.label}
+            <ArrowRight size={16} aria-hidden="true" />
+          </Link>
         </div>
       </div>
-      <div className="stats" data-reveal>
-        {about.stats.map((s) => (
-          <StatCounter key={s.label} {...s} />
-        ))}
-      </div>
+      <StatsStrip items={about.stats} />
     </section>
   );
 }

@@ -1,6 +1,8 @@
 // All brand copy, figures and media live here so the site can be re-skinned
 // without touching components. Keep stats, rating and testimonial in line with real company data.
 
+import { publicEnv } from "./env";
+
 export type PropertyType = "Home" | "Business" | "Industry";
 export type ProjectType = PropertyType | "Carport";
 export type ServiceType = "Installation" | "Maintenance" | "Repair";
@@ -78,10 +80,6 @@ export const pageMeta = {
     title: "Projects | SUNARA",
     description: "Solar installations completed by our team for homes, businesses and industry.",
   },
-  about: {
-    title: "About Us | SUNARA",
-    description: "Who we are, how we work and the team behind every SUNARA solar installation.",
-  },
   contact: {
     title: "Contact Us | SUNARA",
     description: "Get a free quote, book a service or talk to our team about solar for your property.",
@@ -109,6 +107,7 @@ export const about = {
   statementMuted:
     "For homes, businesses and industry, built for the long run and engineered to perform from day one.",
   rating: { value: "4.9 / 5", label: "Customer rating" },
+  link: { label: "Learn more about us", href: "/about" },
   stats: [
     { value: 10, suffix: "K+", label: "Happy customers" },
     { value: 250, suffix: "MW+", label: "Solar installed" },
@@ -206,39 +205,104 @@ export const benefits = {
   video: { src: "/videos/panels.mp4", poster: images.benefits.src },
 };
 
-export const testimonial = {
+// WhatsApp chat links. The number comes from NEXT_PUBLIC_WHATSAPP_NUMBER; without it, WhatsApp buttons are hidden.
+export const whatsapp = {
+  defaultMessage: "Hi SUNARA, I would like a solar quote.",
+  chat: "Chat on WhatsApp",
+  ask: "Ask on WhatsApp",
+  short: "WhatsApp",
+  stickyQuote: { label: "Get quote", href: "#quote" },
+};
+
+// TODO: replace with real financing plan.
+export const emi = {
+  eyebrow: "Flexible financing",
+  title: "Go solar with easy",
+  accent: "monthly installments",
+  text: "Spread the cost over 12 to 36 months with partner banks. In many cases your installment is lower than your current bill.",
+  chips: ["0% markup options", "Bank financing", "Net metering paperwork included"],
+  button: { label: "Check my installment", href: "#quote" },
+  example: {
+    label: "Example: 10 kW system over 24 months",
+    value: "Rs 60,400",
+    unit: "/ month",
+    note: "Compared with an average bill of Rs 70,000 a month.",
+  },
+};
+
+// TODO: replace with real customer reviews (names, quotes and bill figures).
+export const testimonials = {
   eyebrow: "A brighter everyday",
-  quote:
-    "Our bill dropped by more than half in the first month. The team was precise, fast and spotless.",
-  // Replace with a real customer's name and details before launch.
-  name: "Homeowner",
-  role: "Residential solar installation",
-  initials: "H",
+  title: "Homeowners who",
+  accent: "cut their bills",
+  billLabel: { before: "Bill before", after: "Bill after" },
+  items: [
+    {
+      before: "Rs 65,000",
+      after: "Rs 12,000",
+      quote: "The team was precise, fast and spotless. Our bill dropped by more than half in the first month.",
+      name: "Usman Tariq",
+      city: "Faisalabad",
+      system: "8 kW home",
+    },
+    {
+      before: "Rs 120,000",
+      after: "Rs 18,000",
+      quote: "They handled net metering from start to finish. We only signed and waited.",
+      name: "Dr. Ayesha Malik",
+      city: "Lahore",
+      system: "25 kW clinic",
+    },
+    {
+      before: "Rs 48,000",
+      after: "Rs 5,500",
+      quote: "Monitoring on my phone shows exactly what I save. Support answered the same day.",
+      name: "Hamza Raza",
+      city: "Faisalabad",
+      system: "6 kW home",
+    },
+  ],
 };
 
 export const faq = {
   eyebrow: "A little clarity",
-  title: ["Good questions", "Clear answers"],
-  text: "Everything starts with a conversation",
-  link: { label: "Talk to our team", href: "#quote" },
+  title: ["Good questions,", "clear answers"],
   items: [
     {
+      q: "How does net metering work?",
+      a: "Your system exports extra units to the grid and you are credited on your bill. We prepare the application and manage the approval process with your distribution company. Timelines vary, so we confirm an estimate at your assessment.",
+    },
+    {
+      q: "What happens during load shedding?",
+      a: "A standard on-grid system switches off during an outage for safety. A hybrid system with batteries keeps selected appliances running. We help you choose based on your outage hours.",
+    },
+    {
+      q: "On-grid, hybrid or off-grid: which one?",
+      a: "On-grid is the cheapest and best for savings. Hybrid adds battery backup. Off-grid suits places with no reliable grid. We recommend after checking your usage.",
+    },
+    {
+      q: "Do panels work in dust and heat?",
+      a: "Yes. Output dips on very hot days and when panels are dusty, which is why we include cleaning visits and monitoring to flag drops early.",
+    },
+    {
       q: "How long does installation take?",
-      a: "Most home systems are installed in one to three days once the design is approved. Larger commercial and industrial projects are scheduled in phases, and we agree a timeline with you before work begins.",
+      a: "Most home systems take one to three days once the design is approved. Larger projects are phased on an agreed timeline.",
     },
     {
-      q: "Do solar panels work on cloudy days?",
-      a: "Yes, panels still generate from diffuse daylight, though output is lower than on a clear day. Your system is sized around typical sunshine across the whole year, not a single day.",
-    },
-    {
-      q: "What maintenance will my system need?",
-      a: "Very little. Occasional panel cleaning to remove dust, plus a periodic inspection of wiring and the inverter, keeps performance steady. Monitoring helps flag anything unusual early.",
-    },
-    {
-      q: "Can I add battery storage later?",
-      a: "In most cases, yes. We can plan a battery-ready inverter and layout from the start, so adding storage later is simpler. Compatibility depends on the equipment you choose.",
+      q: "How do I claim the warranty?",
+      a: "Call or message us. We handle the claim with the manufacturer, so you deal with one team only.",
     },
   ],
+};
+
+// Home page closing call to action.
+export const homeCta = {
+  eyebrow: "Your next chapter starts here",
+  title: "Ready to power",
+  accent: "your tomorrow?",
+  text: "Tell us about your roof and we will send a free assessment and a clear quote.",
+  // The home page has no form, so the quote button opens the contact page form.
+  primary: { label: "Get a free quote", href: "/contact#quote" },
 };
 
 export const quote = {
@@ -256,12 +320,12 @@ export const quote = {
 export const footer = {
   about:
     "Clean, reliable solar for homes, businesses and industry, designed, installed and monitored by one dedicated team",
-  // Replace each href with the company's real profile URL.
+  // Profile URLs come from env vars (Vercel project settings or .env.local). Empty ones are hidden.
   socials: [
-    { label: "Facebook", icon: "facebook", href: "https://www.facebook.com/" },
-    { label: "Instagram", icon: "instagram", href: "https://www.instagram.com/" },
-    { label: "LinkedIn", icon: "linkedin", href: "https://www.linkedin.com/" },
-    { label: "YouTube", icon: "youtube", href: "https://www.youtube.com/" },
+    { label: "Facebook", icon: "facebook", href: publicEnv.socials.facebook },
+    { label: "Instagram", icon: "instagram", href: publicEnv.socials.instagram },
+    { label: "LinkedIn", icon: "linkedin", href: publicEnv.socials.linkedin },
+    { label: "YouTube", icon: "youtube", href: publicEnv.socials.youtube },
   ] as const,
   badges: ["Free roof assessment", "Residential · Commercial · Industrial"],
   columns: [
@@ -327,8 +391,8 @@ export const legalPages = {
 export type FaqData = {
   eyebrow: string;
   title: readonly string[];
-  text: string;
-  link: { label: string; href: string };
+  text?: string;
+  link?: { label: string; href: string };
   items: { q: string; a: string }[];
 };
 
@@ -589,63 +653,6 @@ export const projectsPage = {
   empty: "No projects in this category yet",
 };
 
-export const aboutPage = {
-  hero: {
-    crumb: "About",
-    eyebrow: "About us",
-    title: "Solar done properly,",
-    accent: "by people who care",
-    text: "We design, install and look after solar systems for homes, businesses and industry, with one team responsible from start to finish",
-    image: images.commercial,
-  },
-  // TODO: replace with the company's own story.
-  story: {
-    eyebrow: "Our story",
-    title: "Built on doing",
-    accent: "the job right",
-    paragraphs: [
-      "SUNARA started with a simple idea: solar should be clear, reliable and properly looked after. Too many systems are installed and then forgotten, losing output to dust, loose wiring or faults nobody notices.",
-      "That is why we handle everything ourselves, from the first roof survey to installation, cleaning and repairs. Our customers always know who to call, and our team takes responsibility for the work it does.",
-    ],
-    // TODO: confirm milestones against company history.
-    milestones: [
-      { year: "2011", label: "Founded" },
-      { year: "2016", label: "50 MW" },
-      { year: "2021", label: "Live monitoring" },
-      { year: "Today", label: "10K+ homes" },
-    ],
-  },
-  banner: { word: "ABOUT", crumb: "About us" },
-  experience: { value: "15+", label: "Years of engineering experience" },
-  mission: {
-    eyebrow: "Our mission",
-    quote: "To make clean energy the easiest decision a family or a business ever makes.",
-  },
-  values: {
-    eyebrow: "What we stand for",
-    title: "Our",
-    accent: "values",
-    items: [
-      { icon: "quality", title: "Quality", text: "Careful design and neat, durable installation on every project" },
-      { icon: "safety", title: "Safety", text: "Safe working practices and proper electrical protection, always" },
-      { icon: "clear", title: "Transparency", text: "Clear advice, honest sizing and no hidden surprises" },
-      { icon: "support", title: "Long-term support", text: "Maintenance and repairs from the same team that installed your system" },
-    ],
-  },
-  team: {
-    eyebrow: "Our team",
-    title: "The people",
-    accent: "behind the work",
-    text: "Every project is handled by our own specialists",
-    // TODO: add real team members (name, role, photo) when available.
-    items: [
-      { icon: "design", title: "Engineering & design", text: "Survey your site and design a system around your energy use" },
-      { icon: "install", title: "Installation crew", text: "Fit panels, inverters and wiring safely and neatly on site" },
-      { icon: "support", title: "Maintenance & support", text: "Clean, inspect and repair systems to keep them performing" },
-    ],
-  },
-};
-
 export const contact = {
   hero: {
     crumb: "Contact",
@@ -657,7 +664,7 @@ export const contact = {
   // TODO: fill in the real company details. Empty fields are hidden.
   details: {
     phone: "",
-    whatsapp: "", // international format without + or spaces, e.g. 923001234567
+    whatsapp: publicEnv.whatsapp, // from NEXT_PUBLIC_WHATSAPP_NUMBER, digits only, e.g. 923001234567
     email: "",
     address: "",
     hours: "",
@@ -706,7 +713,6 @@ export const contact = {
   },
   quick: { phone: "Call us", whatsapp: "WhatsApp", email: "Email us" },
   advisor: {
-    initials: "SR",
     title: "Talk to a solar advisor",
     open: "Open now, replying in minutes",
     closed: "Closed now, we will reply next working day",

@@ -1,161 +1,325 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { about, aboutPage, benefits, images, pageMeta } from "@/lib/content";
+import { BadgeCheck, Check, Clock, FileText, MapPin, Minus, ShieldCheck, X, Zap } from "lucide-react";
+import { aboutContent as c, env } from "@/content/about";
+import { brand, images } from "@/lib/content";
 import { PageShell } from "@/components/PageShell";
+import { PageHero } from "@/components/PageHero";
 import { Eyebrow } from "@/components/Eyebrow";
 import { Accent } from "@/components/Accent";
+import { Button } from "@/components/Button";
 import { FeatureIcon } from "@/components/FeatureIcon";
-import { StatCounter } from "@/components/StatCounter";
-import { QuoteCta } from "@/components/QuoteCta";
+import { StatsStrip } from "@/components/StatsStrip";
+import { Sunburst } from "@/components/Sunburst";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
-export const metadata: Metadata = pageMeta.about;
+export const metadata: Metadata = c.meta;
 
 const delay = (ms: number) => ({ "--d": `${ms}ms` }) as React.CSSProperties;
 
+/** Section heading: eyebrow, H2 with accent word, optional intro. */
+function Heading({ id, eyebrow, title, accent, text }: { id: string; eyebrow: string; title: string; accent: string; text?: string }) {
+  return (
+    <div className="abx-head" data-reveal>
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h2 id={id} className="section-title">
+        {title} <Accent>{accent}</Accent>
+      </h2>
+      {text && <p className="section-text">{text}</p>}
+    </div>
+  );
+}
+
+/** Initials on a light blue gradient, used until real photos are added. */
+function Avatar({ photo, initials, alt, size }: { photo: string; initials: string; alt: string; size: number }) {
+  if (photo) return <Image src={photo} alt={alt} width={size} height={size} className="abx-avatar abx-avatar-photo" />;
+  return (
+    <span className="abx-avatar" style={{ width: size, height: size }} aria-hidden="true">
+      {initials}
+    </span>
+  );
+}
+
+function CompareCell({ value }: { value: boolean | "partial" }) {
+  const { yes, no, partial } = c.comparison.labels;
+  if (value === "partial")
+    return (
+      <span className="abx-mark is-partial">
+        <Minus size={16} aria-hidden="true" />
+        <span className="abx-mark-text">{partial}</span>
+      </span>
+    );
+  return value ? (
+    <span className="abx-mark is-yes">
+      <Check size={16} aria-hidden="true" />
+      <span className="sr-only">{yes}</span>
+    </span>
+  ) : (
+    <span className="abx-mark is-no">
+      <X size={16} aria-hidden="true" />
+      <span className="sr-only">{no}</span>
+    </span>
+  );
+}
+
+const noteIcons = { zap: Zap, file: FileText } as const;
+
 export default function AboutPage() {
-  const { hero, banner, story, experience, mission, values, team } = aboutPage;
-  const [customers, installed] = about.stats;
-  const img = images.hero;
-  // Bento crops of the hero photo use background sizing, set per block in CSS.
-  const photo = { "--photo": `url("${img.src}")` } as React.CSSProperties;
+  const { hero, story, timeline, stats, trust, values, team, comparison, local, cta } = c;
+  const { founder } = story;
+  const approvals = trust.approvals.filter((a) => a.show);
+
+  // Organization structured data with both offices.
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: brand.name,
+    description: c.meta.description,
+    ...(env.siteUrl ? { url: env.siteUrl, logo: `${env.siteUrl}${images.logo.src}` } : {}),
+    department: local.offices.map((o) => ({
+      "@type": "LocalBusiness",
+      name: `${brand.name} ${o.city}`,
+      openingHours: o.hours,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: o.address,
+        addressLocality: o.city,
+        addressRegion: o.region,
+        addressCountry: "PK",
+      },
+    })),
+  };
 
   return (
     <PageShell>
-      <section className="ab-banner" aria-labelledby="page-title">
-        <div className="ab-banner-frame">
-          <div className="ab-banner-media">
-            <Image
-              src={images.aboutHero.src}
-              alt={images.aboutHero.alt}
-              fill
-              priority
-              sizes="100vw"
-              placeholder="blur"
-              blurDataURL={images.aboutHero.blur}
-              className="ab-banner-img"
-            />
-            <div className="ab-banner-word" aria-hidden="true">
-              {banner.word.split("").map((ch, i) => (
-                <span key={i} style={{ "--i": i } as React.CSSProperties}>
-                  {ch}
-                </span>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
+      {/* 1. Hero */}
+      <PageHero
+        className="abx-hero"
+        crumb={hero.crumb}
+        eyebrow={hero.eyebrow}
+        title={hero.title}
+        accent={hero.accent}
+        text={hero.lead}
+        image={hero.image}
+        primary={hero.primary}
+        secondary={hero.secondary}
+      />
+
+      {/* 2. Story + founder note */}
+      <section className="section container abx-story" aria-labelledby="story-title">
+        <div className="abx-story-copy" data-reveal>
+          <Eyebrow>{story.eyebrow}</Eyebrow>
+          <h2 id="story-title" className="section-title">
+            {story.title} <Accent>{story.accent}</Accent>
+          </h2>
+          <p className="abx-lead">{story.text}</p>
+        </div>
+        <figure className="abx-founder" data-reveal style={delay(120)}>
+          <Avatar photo={founder.photo} initials={founder.initials} alt={`${founder.name}, ${founder.role}`} size={96} />
+          <blockquote className="abx-founder-quote">
+            <p>“{founder.quote}”</p>
+          </blockquote>
+          <figcaption className="abx-founder-name">
+            <strong>{founder.name}</strong>
+            <span>{founder.role}</span>
+          </figcaption>
+        </figure>
+      </section>
+
+      {/* 3. Timeline */}
+      <section className="section section-tint abx-band" aria-labelledby="timeline-title">
+        <div className="container">
+          <Heading {...timeline} id="timeline-title" />
+          <div className="abx-timeline" data-reveal>
+            <span className="abx-line" aria-hidden="true">
+              <span className="abx-line-fill" />
+            </span>
+            <ol className="abx-milestones">
+              {timeline.items.map((t, i) => (
+                <li key={t.year} className="abx-milestone" style={delay(200 + i * 160)}>
+                  <span className="abx-dot" aria-hidden="true" />
+                  <p className="abx-year">{t.year}</p>
+                  <h3 className="abx-h3">{t.title}</h3>
+                  <p className="abx-small">{t.text}</p>
+                </li>
               ))}
-            </div>
-            <div className="ab-banner-shade" aria-hidden="true" />
-          </div>
-          <div className="ab-banner-card glass">
-            <nav className="ab-crumbs hero-seq" aria-label="Breadcrumb" style={{ "--s": 1 } as React.CSSProperties}>
-              <Link href="/">Home</Link>
-              <span aria-hidden="true">/</span>
-              <span aria-current="page">{banner.crumb}</span>
-            </nav>
-            <h1 id="page-title" className="ab-banner-title hero-seq" style={{ "--s": 2 } as React.CSSProperties}>
-              {hero.title} <Accent>{hero.accent}</Accent>
-            </h1>
-            <p className="ab-banner-text hero-seq" style={{ "--s": 3 } as React.CSSProperties}>
-              {hero.text}
-            </p>
+            </ol>
           </div>
         </div>
       </section>
 
-      <section className="ab-bento-wrap" aria-label="About SUNARA">
-        <div className="ab-bento">
-          <article className="ab-block ab-span-7 ab-light ab-story" data-reveal>
-            <Eyebrow>{story.eyebrow}</Eyebrow>
-            <h2 className="ab-h3">
-              {story.title} <Accent>{story.accent}</Accent>
-            </h2>
-            {story.paragraphs.map((para) => (
-              <p key={para.slice(0, 24)} className="ab-text">
-                {para}
-              </p>
-            ))}
-            <ul className="ab-chips">
-              {story.milestones.map((m) => (
-                <li key={m.year} className="ab-chip">
-                  <span className="ab-chip-year">{m.year}</span> {m.label}
-                </li>
-              ))}
-            </ul>
-          </article>
+      {/* 4. Stats */}
+      <section className="container abx-stats" aria-label="SUNARA in numbers">
+        <StatsStrip items={stats} />
+      </section>
 
-          <figure className="ab-block ab-span-5 ab-photo ab-photo-village" data-reveal style={{ ...delay(90), ...photo }}>
-            <figcaption className="ab-float glass">
-              <span className="ab-float-value">{experience.value}</span>
-              <span className="ab-float-label">{experience.label}</span>
-            </figcaption>
-          </figure>
-
-          <div className="ab-block ab-span-4 ab-stat" data-reveal>
-            <StatCounter {...customers} />
-          </div>
-          <div className="ab-block ab-span-4 ab-stat" data-reveal style={delay(90)}>
-            <StatCounter {...installed} />
-          </div>
-          <div className="ab-block ab-span-4 ab-stat ab-blue" data-reveal style={delay(180)}>
-            <div className="stat">
-              <p className="stat-value">{benefits.warranty.value}</p>
-              <p className="stat-label">{benefits.warranty.label}</p>
-            </div>
-          </div>
-
-          <figure className="ab-block ab-span-5 ab-photo ab-mission" data-reveal style={{ "--photo": `url("${images.residential.src}")` } as React.CSSProperties}>
-            <div className="ab-mission-shade" aria-hidden="true" />
-            <blockquote className="ab-mission-copy">
-              <Eyebrow>{mission.eyebrow}</Eyebrow>
-              <p className="ab-mission-quote">{mission.quote}</p>
-            </blockquote>
-          </figure>
-
-          <article className="ab-block ab-span-7 ab-values" data-reveal style={delay(90)}>
-            <Eyebrow>{values.eyebrow}</Eyebrow>
-            <h2 className="ab-h3">
-              {values.title} <Accent>{values.accent}</Accent>
-            </h2>
-            <ul className="ab-values-grid">
-              {values.items.map((v) => (
-                <li key={v.title} className="ab-value">
-                  <span className="benefit-icon">
-                    <FeatureIcon name={v.icon} />
-                  </span>
-                  <h3 className="ab-h4">{v.title}</h3>
-                  <p className="ab-small">{v.text}</p>
-                </li>
-              ))}
-            </ul>
-          </article>
-
-          <article className="ab-block ab-span-12 ab-light ab-team" data-reveal>
-            <div className="ab-team-head">
+      {/* 5. Trust */}
+      <section className="section container" aria-labelledby="trust-title">
+        <Heading {...trust} id="trust-title" />
+        <div className="abx-trust">
+          <div className="abx-panel" data-reveal>
+            <h3 className="abx-h3">{trust.approvalsTitle}</h3>
+            {approvals.length > 0 && (
+              <ul className="abx-badges">
+                {approvals.map((a) => (
+                  <li key={a.label} className="abx-badge">
+                    <BadgeCheck size={20} aria-hidden="true" />
+                    <span>
+                      <strong>{a.label}</strong>
+                      <span className="abx-small">{a.detail}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <div className="abx-warranty">
+              <ShieldCheck size={28} aria-hidden="true" />
+              <p className="abx-warranty-value">{trust.warranty.value}</p>
               <div>
-                <Eyebrow>{team.eyebrow}</Eyebrow>
-                <h2 className="ab-h3">
-                  {team.title} <Accent>{team.accent}</Accent>
-                </h2>
+                <p className="abx-warranty-label">{trust.warranty.label}</p>
+                <p className="abx-small">{trust.warranty.text}</p>
               </div>
-              <p className="ab-text">{team.text}</p>
             </div>
-            <ul className="ab-team-grid">
-              {team.items.map((t) => (
-                <li key={t.title} className="ab-member">
-                  {/* No team photos yet: gradient avatar with the role icon. */}
-                  <span className="ab-avatar">
-                    <FeatureIcon name={t.icon} size={24} />
-                  </span>
-                  <div>
-                    <h3 className="ab-h4">{t.title}</h3>
-                    <p className="ab-small">{t.text}</p>
-                  </div>
+          </div>
+          <div className="abx-panel" data-reveal style={delay(120)}>
+            <h3 className="abx-h3">{trust.partnersTitle}</h3>
+            <p className="abx-small">{trust.partnersText}</p>
+            <ul className="abx-logos">
+              {trust.partners.map((p) => (
+                <li key={p.name} className="abx-logo">
+                  {p.logo ? <Image src={p.logo} alt={p.name} width={120} height={40} className="abx-logo-img" /> : <span>{p.name}</span>}
                 </li>
               ))}
             </ul>
-          </article>
+          </div>
         </div>
       </section>
 
-      <QuoteCta />
+      {/* 6. Values */}
+      <section className="section section-tint abx-band" aria-labelledby="values-title">
+        <div className="container">
+          <Heading {...values} id="values-title" />
+          <ul className="abx-values">
+            {values.items.map((v, i) => (
+              <li key={v.title} className="abx-card abx-value" data-reveal style={delay(i * 90)}>
+                <span className="abx-icon">
+                  <FeatureIcon name={v.icon} size={22} />
+                </span>
+                <h3 className="abx-h3">{v.title}</h3>
+                <p className="abx-small">{v.text}</p>
+                <p className="abx-proof">
+                  <Check size={15} aria-hidden="true" />
+                  {v.proof}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* 7. Team */}
+      <section className="section container abx-team" id={team.id} aria-labelledby="team-title">
+        <Heading {...team} id="team-title" />
+        <ul className="abx-team-grid">
+          {team.members.map((m, i) => (
+            <li key={m.role} className="abx-card abx-member" data-reveal style={delay(i * 90)}>
+              <Avatar photo={m.photo} initials={m.initials} alt={`${m.name}, ${m.role}`} size={72} />
+              <h3 className="abx-h3">{m.name}</h3>
+              <p className="abx-role">{m.role}</p>
+              <p className="abx-small">{m.text}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* 8. Comparison */}
+      <section className="section section-tint abx-band" aria-labelledby="compare-title">
+        <div className="container">
+          <Heading {...comparison} id="compare-title" />
+          <div className="abx-table-wrap" role="region" aria-labelledby="compare-title" tabIndex={0} data-reveal>
+            <table className="abx-table">
+              <caption className="sr-only">{comparison.caption}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">{comparison.columns.feature}</th>
+                  <th scope="col">{comparison.columns.typical}</th>
+                  <th scope="col" className="is-us">
+                    {comparison.columns.sunara}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {comparison.rows.map((r) => (
+                  <tr key={r.feature}>
+                    <th scope="row">{r.feature}</th>
+                    <td>
+                      <CompareCell value={r.typical} />
+                    </td>
+                    <td className="is-us">
+                      <CompareCell value={r.sunara} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. Local */}
+      <section className="section container" aria-labelledby="local-title">
+        <Heading {...local} id="local-title" />
+        <div className="abx-local">
+          {local.offices.map((o, i) => (
+            <article key={o.city} className="abx-card abx-office" data-reveal style={delay(i * 90)}>
+              <h3 className="abx-h3">{o.city}</h3>
+              <p className="abx-office-row">
+                <MapPin size={18} aria-hidden="true" />
+                <span>{o.address}</span>
+              </p>
+              <p className="abx-office-row">
+                <Clock size={18} aria-hidden="true" />
+                <span>{o.hours}</span>
+              </p>
+            </article>
+          ))}
+          {local.notes.map((n, i) => {
+            const Icon = noteIcons[n.icon as keyof typeof noteIcons];
+            return (
+              <div key={n.title} className="abx-note" data-reveal style={delay(180 + i * 90)}>
+                <span className="abx-icon">
+                  <Icon size={20} aria-hidden="true" />
+                </span>
+                <div>
+                  <h3 className="abx-h4">{n.title}</h3>
+                  <p className="abx-small">{n.text}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* 10. Closing CTA */}
+      <section className="section container" aria-labelledby="cta-title">
+        <div className="abx-cta" data-reveal>
+          <Sunburst className="abx-cta-sun" rays={16} />
+          <Eyebrow>{cta.eyebrow}</Eyebrow>
+          <h2 id="cta-title" className="section-title">
+            {cta.title} <Accent>{cta.accent}</Accent>
+          </h2>
+          <p className="section-text">{cta.text}</p>
+          <div className="abx-cta-actions">
+            <Button href={cta.primary.href}>{cta.primary.label}</Button>
+            <Button href={cta.secondary.href} variant="secondary" arrow="right">
+              {cta.secondary.label}
+            </Button>
+            <WhatsAppButton label={cta.whatsapp.label} />
+          </div>
+        </div>
+      </section>
     </PageShell>
   );
 }

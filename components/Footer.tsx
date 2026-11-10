@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { ArrowUp, ArrowUpRight, BadgeCheck, Clock, Globe, Mail, MapPin, MessageCircle, Phone, type LucideIcon } from "lucide-react";
-import { brand, contact, footer } from "@/lib/content";
+import { ArrowUp, ArrowUpRight, BadgeCheck, Clock, Globe, Mail, MapPin, Phone, type LucideIcon } from "lucide-react";
+import Image from "next/image";
+import { brand, contact, footer, images } from "@/lib/content";
 import { Logo } from "./Logo";
 import { SocialIcon } from "./SocialIcon";
+import { WhatsAppIcon } from "./WhatsAppIcon";
 import { ContactStatus } from "./ContactStatus";
 
 export function Footer() {
@@ -11,9 +13,11 @@ export function Footer() {
   // Only the contact details that have been filled in are shown.
   const channels = [
     d.phone && { key: "phone", icon: Phone, label: d.phone, href: `tel:${d.phone.replace(/\s+/g, "")}` },
-    d.whatsapp && { key: "whatsapp", icon: MessageCircle, label: `+${d.whatsapp}`, href: `https://wa.me/${d.whatsapp}`, external: true },
+    d.whatsapp && { key: "whatsapp", icon: WhatsAppIcon, label: `+${d.whatsapp}`, href: `https://wa.me/${d.whatsapp}`, external: true },
     d.email && { key: "email", icon: Mail, label: d.email, href: `mailto:${d.email}` },
-  ].filter(Boolean) as { key: string; icon: LucideIcon; label: string; href: string; external?: boolean }[];
+  ].filter(Boolean) as { key: string; icon: LucideIcon | typeof WhatsAppIcon; label: string; href: string; external?: boolean }[];
+  // Social profiles are set via env vars; unset ones are hidden.
+  const socials = footer.socials.filter((s) => s.href);
 
   return (
     <footer className="container footer-wrap">
@@ -38,24 +42,26 @@ export function Footer() {
               ))}
             </ul>
 
-            <div className="footer-follow">
-              <p className="footer-col-title">{l.socials}</p>
-              <ul className="footer-socials" aria-label="Social media">
-                {footer.socials.map((s) => (
-                  <li key={s.label}>
-                    <a href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} className="footer-social">
-                      <SocialIcon name={s.icon} />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {socials.length > 0 && (
+              <div className="footer-follow">
+                <p className="footer-col-title">{l.socials}</p>
+                <ul className="footer-socials" aria-label="Social media">
+                  {socials.map((s) => (
+                    <li key={s.label}>
+                      <a href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} className="footer-social">
+                        <SocialIcon name={s.icon} />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
           <div className="footer-contact">
             <div className="footer-advisor">
               <span className="footer-avatar" aria-hidden="true">
-                {advisor.initials}
+                <Image src={images.logo.src} alt="" width={images.logo.width} height={images.logo.height} className="footer-avatar-logo" />
               </span>
               <div>
                 <p className="footer-col-title">{contact.hero.eyebrow}</p>

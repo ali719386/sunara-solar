@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import { faq as homeFaq, type FaqData } from "@/lib/content";
 import { Eyebrow } from "./Eyebrow";
 
-export function Faq({ data = homeFaq }: { data?: FaqData }) {
+export function Faq({ data = homeFaq, action }: { data?: FaqData; action?: React.ReactNode }) {
   const faq = data;
   const [open, setOpen] = useState<number | null>(0);
   const id = useId();
@@ -20,10 +20,13 @@ export function Faq({ data = homeFaq }: { data?: FaqData }) {
             <br />
             {faq.title[1]}
           </h2>
-          <p className="section-text">{faq.text}</p>
-          <a href={faq.link.href} className="text-link">
-            {faq.link.label}
-          </a>
+          {faq.text && <p className="section-text">{faq.text}</p>}
+          {faq.link && (
+            <a href={faq.link.href} className="text-link">
+              {faq.link.label}
+            </a>
+          )}
+          {action && <div className="faq-action">{action}</div>}
         </div>
         <div className="faq-list" data-reveal style={{ "--d": "100ms" } as React.CSSProperties}>
           {faq.items.map((item, i) => {
