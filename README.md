@@ -1,4 +1,4 @@
-# SUNARA — premium solar concept site
+# SUNARA - premium solar concept site
 
 Next.js App Router · TypeScript · Tailwind CSS v4 · next/font · lucide-react. No animation library — motion uses CSS, IntersectionObserver and requestAnimationFrame.
 
