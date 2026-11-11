@@ -1,66 +1,105 @@
-# SUNARA - premium solar concept site
+# SUNARA - premium solar website
 
-Next.js App Router · TypeScript · Tailwind CSS v4 · next/font · lucide-react. No animation library — motion uses CSS, IntersectionObserver and requestAnimationFrame.
+Marketing site for SUNARA: home, about, services, packages, projects and contact pages, a solar savings calculator for US homes, and the SUNARA Assistant chatbot.
+
+Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · next/font · lucide-react · Google Gemini (`@google/genai`). Motion uses plain CSS, IntersectionObserver and requestAnimationFrame; there is no animation library.
+
+Setup requirements (Node version, keys, accounts) are listed in [`requirements.txt`](requirements.txt).
 
 ## Run
 
 ```bash
 npm install
-npm run dev        # http://localhost:3000
-npm run build && npm start
-npm run typecheck
-npm run lint
-npm test
+cp .env.example .env.local   # then fill in the keys, see "Environment variables"
+npm run dev                  # http://localhost:3000
 ```
 
-npm cache is pinned to `E:/dev-cache/npm` via `.npmrc`; Next telemetry is disabled in `.env`.
-
-## Required images (`public/images/`)
-
-| File | Notes |
+| Command | What it does |
 | --- | --- |
-| `hero.jpg` | **1672 × 941**, full rooftop photo. The roof mask depends on this exact image. |
-| `residential.jpg` | Stone home with rooftop solar (from `Home.png`). |
-| `commercial.jpg` | Office building with solar carports (from `office .png`). |
-| `industry.jpg` | Warehouse with a large roof array (from `Industry.png`). |
-| `benefits.jpg` | Tall crop of the hero photo; poster for `public/videos/panels.mp4`. |
+| `npm run dev` | Local dev server with hot reload |
+| `npm run build` / `npm start` | Production build, then serve it |
+| `npm run typecheck` | TypeScript check (`tsc --noEmit`) |
+| `npm run lint` | ESLint with the Next.js rules |
+| `npm test` | Unit tests (Vitest) |
 
-To swap a photo, replace the file with the same name.
+Do not run `npm run build` while `npm run dev` is running: both write to `.next` and the dev server breaks. Stop it first, or delete `.next` and restart it if it already happened.
 
-### Roof mask
+The npm cache is pinned to `E:/dev-cache/npm` in `.npmrc`; Next telemetry is disabled in `.env`.
 
-`heroRoofClip` in `lib/content.ts` is the starting polygon. After adding `hero.jpg`, open the site at ~1440px and adjust the points so the roof edge in the foreground layer sits exactly on the photographed roof edge. Alternatively, export a transparent PNG cutout of the roof and replace the clipped `<Image>` in `components/Hero.tsx` with it.
+## Environment variables
+
+Copy `.env.example` to `.env.local` for local work. On Vercel, set them under Project > Settings > Environment Variables (Production and Preview), then redeploy. `.env.local` is gitignored; never commit keys.
+
+| Variable | Needed for | Notes |
+| --- | --- | --- |
+| `GEMINI_API_KEY` | Chatbot answers and the calculator's "AI Solar Advice" | Server only. https://aistudio.google.com/apikey. Without it both use built-in answers. The free tier allows very few requests; enable billing for real traffic. |
+| `GEMINI_MODEL` | Optional | Defaults to `gemini-3.8-flash`. |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | WhatsApp buttons and chat links | Digits only, country code first. Defaults to the number in `lib/env.ts`. |
+| `NEXT_PUBLIC_SITE_URL` | Structured data | No trailing slash. |
+| `NEXT_PUBLIC_SOCIAL_*` | Footer social links | Facebook, Instagram, LinkedIn, YouTube. Empty ones are hidden. |
+| `NLR_API_KEY` | Only `scripts/build-state-sun.mjs` | Free at https://developer.nlr.gov/signup/. The site itself never calls NLR, so Vercel does not need it. |
+
+## Deploy
+
+Pushing to `main` on GitHub (`ali719386/sunara-solar`) deploys to Vercel automatically. Live site: https://sunara-solar-tawny.vercel.app
+
+Commits must not carry a `Co-Authored-By` trailer for an AI tool: Vercel Hobby blocks deployments whose commit authors are not team members.
+
+## Project structure
+
+| Path | Contents |
+| --- | --- |
+| `app/` | Pages (`/`, `about`, `services`, `packages`, `projects`, `contact`, `privacy`, `terms`), `layout.tsx`, `globals.css` |
+| `app/api/chat/route.ts` | Chatbot API (Gemini, streaming) |
+| `app/api/solar-advice/route.ts` | Calculator "AI Solar Advice" API (Gemini) |
+| `components/` | All UI components |
+| `lib/content.ts` | Site copy, figures, images, testimonials, packages, FAQ |
+| `content/about.ts` | About page copy (story, founder, approvals, partners, team, offices) |
+| `lib/solarConfig.ts`, `lib/solarCalc.ts`, `lib/usStates.ts`, `lib/stateSun.ts` | Calculator settings, maths and data |
+| `lib/chat*.ts`, `lib/gemini.ts`, `lib/rateLimit.ts` | Chatbot logic |
+| `scripts/` | One off scripts (chat icon, state sun data) |
+| `public/images`, `public/videos` | Photos, icons and the benefits video |
 
 ## Content
 
-All copy, figures, currency, images and testimonials live in `lib/content.ts`. Figures, ratings and testimonials are illustrative.
+Copy, figures, images and testimonials live in `lib/content.ts` and `content/about.ts`; edit them there, not in components. Prices and bills are shown in US dollars. Ratings, stats, approvals and testimonials are illustrative and marked `TODO` until they are confirmed with real company data. Avoid the em dash character in copy.
 
-## Solar savings calculator (`#savings`)
+### Images (`public/images/`)
 
-- `lib/solarConfig.ts`: location presets, currencies, bill ranges, cost per watt and constants. All figures are estimates; edit them there.
-- `lib/solarCalc.ts`: pure calculation (`calculateSolar`), tested in `lib/solarCalc.test.ts` (`npm test`).
-- `lib/usStates.ts`: the 50 US states and DC for the Location dropdown. Rate and average bill are EIA 2024 residential averages (Table 5A, https://www.eia.gov/electricity/sales_revenue_price/); sun hours are NREL-based annual averages (Unbound Solar table). Update when EIA publishes a newer year.
-- `components/StateSunIntensity.tsx`: when a state is picked, a Sun intensity card shows its yearly peak sun hours on a US wide meter and the month by month pattern for its largest city. The monthly data is bundled in `lib/stateSun.ts` (no request at runtime), generated by `node scripts/build-state-sun.mjs` from NLR (formerly NREL) PVWatts / NSRDB data; that script needs `NLR_API_KEY` in `.env.local` (free at https://developer.nlr.gov/signup/).
-- `components/SolarCalculator.tsx`: the UI. "Get a Free Quote" opens `/contact` with city and message prefilled.
-- `app/api/solar-advice/route.ts`: server route that asks Google Gemini for 3 sentences of advice. Rate limited to 10 requests per minute per IP (in memory, per server instance).
+Pages use the `.webp` files referenced in `lib/content.ts` (for example `hero.webp`, `residential.webp`, `services-1-hero.webp`, `project-*.webp`). To swap a photo, replace the file and keep its name. `benefits.jpg` is also the poster for `public/videos/panels.mp4`.
 
-Set `GEMINI_API_KEY` (from https://aistudio.google.com/apikey) in `.env.local` for local dev, and in Vercel under Project > Settings > Environment Variables (Production and Preview) for deploys. It is read on the server only. Without a key, the calculator shows built-in advice text built from the same numbers.
+The home hero hides the "SOLAR" lettering behind the roof with `heroRoofClip` in `lib/content.ts`, a polygon traced for `hero.webp` (1672 × 941). If the hero photo changes, re-trace it at about 1440 px wide.
+
+## Solar savings calculator (home page, `#savings`)
+
+- **Location:** a dropdown of the 50 US states and DC (`components/LocationCombobox.tsx`). Picking a state sets USD, that state's rate per kWh and average monthly bill, and its sun hours. Every value stays editable. Other places can still be typed.
+- **State data:** `lib/usStates.ts`. Rate and bill are EIA 2024 residential averages (Table 5A, https://www.eia.gov/electricity/sales_revenue_price/). Sun hours are NREL based annual averages (Unbound Solar's table). Update when EIA publishes a newer year.
+- **Sun intensity card:** `components/StateSunIntensity.tsx` shows the state's yearly peak sun hours on a US wide meter, a level (Excellent, Good, Fair, Low) and a month by month chart for its largest city. The monthly data is bundled in `lib/stateSun.ts`, so nothing is fetched at runtime. Regenerate it with `node scripts/build-state-sun.mjs` (needs `NLR_API_KEY`); it uses OpenStreetMap Nominatim for locations and NLR (formerly NREL) PVWatts v8 / NSRDB for sun data.
+- **Maths:** `lib/solarCalc.ts` (`calculateSolar`), settings and constants in `lib/solarConfig.ts`. All figures are estimates.
+- **Results:** system size, roof panel visual, monthly and yearly savings, CO2 avoided, bill offset, before and after bars.
+- **AI advice:** `app/api/solar-advice/route.ts` asks Gemini for 3 sentences built only from the numbers. 10 requests per minute per IP. Falls back to built-in text.
+- **CTAs:** "Get a Free Quote" opens `/contact` with city and message prefilled; "Chat on WhatsApp" sends a prefilled summary.
 
 ## SUNARA Assistant chatbot
 
-- `components/ChatWidget.tsx`: floating launcher, mounted in `app/layout.tsx`. The panel (`components/ChatPanel.tsx`) loads only when first needed.
-- `app/api/chat/route.ts`: streams answers from Google Gemini (`GEMINI_MODEL`, default `gemini-3.8-flash`, client in `lib/gemini.ts`) with an `estimate_solar` tool backed by `lib/solarCalc.ts`. 15 requests per minute per IP (in memory), 15 second timeout. `GET /api/chat` reports whether the AI is configured.
-- `lib/chatKnowledge.ts`: knowledge base built from `lib/content.ts` and `content/about.ts`, so editing site copy updates the bot.
-- `lib/chatFallback.ts`: keyword replies (English, Roman Urdu, Urdu) used when `GEMINI_API_KEY` is missing or the API fails.
-- Several chats per visit: `+` (New chat) starts a fresh one and keeps the old, the chats button lists them to reopen or delete. Up to 10 are kept in sessionStorage (`lib/chatStore.ts`).
-- Lead capture opens WhatsApp with the visitor’s name, phone and location. Nothing is stored on the server.
-- Icon: `public/images/chatbot-icon.png` is generated from `public/images/chatbot.png` with `node scripts/prepare-chat-icon.mjs`.
+- **Launcher:** `components/ChatWidget.tsx`, mounted in `app/layout.tsx`. One floating dock holds the assistant (left) and WhatsApp (right) on every page. The panel (`components/ChatPanel.tsx`) loads only when first opened.
+- **API:** `app/api/chat/route.ts` streams Gemini answers and can call an `estimate_solar` tool backed by `lib/solarCalc.ts`. 15 requests per minute per IP, 15 second limit, 8 seconds to the first words. `GET /api/chat` reports whether the AI is configured.
+- **Knowledge:** `lib/chatKnowledge.ts` is built from `lib/content.ts` and `content/about.ts`, so editing site copy updates the bot. Answers stay in USD unless the visitor uses another currency.
+- **Offline replies:** `lib/chatFallback.ts` answers in English, Roman Urdu or Urdu when the key is missing or Gemini fails. Greetings and small talk are always answered locally and instantly.
+- **Chats:** several conversations per visit (New chat keeps the old ones, the chats button reopens or deletes them), up to 10 in sessionStorage (`lib/chatStore.ts`).
+- **Leads:** a buying question shows a short form that opens WhatsApp with the visitor's name, phone and location. Nothing is stored on the server.
+- **Icon:** `public/images/chatbot-icon.png`, generated from `chatbot.png` by `node scripts/prepare-chat-icon.mjs`.
 
-## Quote form
+## Forms
 
-Front-end demo only - nothing is transmitted or stored. See the `TODO` in `components/QuoteForm.tsx` for API integration.
+The quote and contact forms are front end only: nothing is sent or stored yet. See the `TODO` notes in `components/QuoteForm.tsx` and `components/ContactForm.tsx` before launch.
 
-## Motion
+## Theme, motion and performance
 
-- `html[data-motion="on|off"]` - set before paint from `localStorage` (`sunara-motion`) and `prefers-reduced-motion`, then managed by `MotionProvider`. "Off" collapses all animations/transitions to their final state.
-- Theme: `html[data-theme]`, persisted in `localStorage` (`sunara-theme`), defaults to light.
+- **Theme:** `html[data-theme]`, saved in `localStorage` (`sunara-theme`), light by default, switched by the toggle in the navbar.
+- **Motion:** `html[data-motion]` follows the device's reduced motion setting (set before paint in `app/layout.tsx`, then kept in sync by `MotionProvider`). With reduced motion, animations jump to their final state.
+- **Scrolling:** backdrop blurs on fixed elements are kept light (blur only, no saturate) and there are no blurs over images, because heavy blurs cause scroll stutter. Scroll handlers run in `requestAnimationFrame` and never measure layout.
+
+## Tests
+
+`npm test` runs the Vitest suites in `lib/*.test.ts`: calculator maths, US state data and search, chat request validation, the offline responder and the chat store. They make no network calls.
