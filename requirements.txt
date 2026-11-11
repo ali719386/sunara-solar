@@ -1,0 +1,81 @@
+SUNARA solar website: requirements
+===================================
+
+This is a Node.js (Next.js) project, not Python. Packages are installed with
+"npm install" from package.json and package-lock.json; this file only lists
+what you need around them. Full setup steps are in README.md.
+
+
+1. Software
+-----------
+- Node.js 20 or newer (developed on Node 24.19)
+- npm 10 or newer (comes with Node; developed on npm 11.17)
+- Git
+- A modern browser (Chrome, Edge, Firefox or Safari)
+
+
+2. Accounts and keys
+--------------------
+Put keys in .env.local (copy .env.example). Never commit them.
+
+Required for AI features
+- Google Gemini API key  -> GEMINI_API_KEY
+  https://aistudio.google.com/apikey
+  Powers the chatbot and the calculator's AI advice. Without it the site still
+  works with built-in answers. The free tier is very small; enable billing for
+  real visitors.
+
+Optional
+- NLR (formerly NREL) API key -> NLR_API_KEY
+  https://developer.nlr.gov/signup/   (free)
+  Only for re-running scripts/build-state-sun.mjs. Not needed on Vercel.
+- WhatsApp number -> NEXT_PUBLIC_WHATSAPP_NUMBER (digits, country code first)
+- Site URL and social links -> NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_SOCIAL_*
+
+Hosting
+- GitHub repository: ali719386/sunara-solar (push to main deploys)
+- Vercel project connected to that repository, with GEMINI_API_KEY set
+
+
+3. npm packages (installed by "npm install")
+--------------------------------------------
+Runtime
+- next              ^15.1.0   (installed 15.5.x)
+- react             ^19.0.0
+- react-dom         ^19.0.0
+- lucide-react      ^0.460.0  (icons)
+- @google/genai     ^3.1.0    (Gemini SDK, server only)
+
+Development
+- typescript        ^5.6.0
+- tailwindcss       ^4.0.0
+- @tailwindcss/postcss ^4.0.0
+- eslint            ^9.39.5
+- eslint-config-next ^15.5.28
+- @eslint/eslintrc  ^3.3.7
+- vitest            ^5.1.0    (unit tests)
+- sharp             ^0.35.5   (image processing for scripts and Next images)
+- @types/node ^22, @types/react ^19, @types/react-dom ^19
+
+The exact versions are locked in package-lock.json.
+
+
+4. Data sources used by the calculator
+--------------------------------------
+- US Energy Information Administration (EIA), 2024 residential rates and bills
+  https://www.eia.gov/electricity/sales_revenue_price/
+- NREL based annual peak sun hours by state (Unbound Solar table)
+  https://unboundsolar.com/solar-information/sun-hours-us-map
+- NLR (formerly NREL) PVWatts v8 / NSRDB monthly sun data, via
+  scripts/build-state-sun.mjs (bundled in lib/stateSun.ts)
+- OpenStreetMap Nominatim for city locations (same script)
+  Location data (c) OpenStreetMap contributors
+
+
+5. Quick check after setup
+--------------------------
+  npm install
+  npm run typecheck
+  npm run lint
+  npm test
+  npm run dev        then open http://localhost:3000
