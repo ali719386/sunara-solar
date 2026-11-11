@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { Check, ChevronDown } from "lucide-react";
 import { contact, quote } from "@/lib/content";
 import { Button } from "./Button";
@@ -29,6 +29,14 @@ export function ContactForm() {
   const [values, setValues] = useState(empty);
   const [errors, setErrors] = useState<Errors>({});
   const [sent, setSent] = useState(false);
+
+  // Prefill from the home page savings calculator (/contact?city=...&message=...#quote).
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const city = q.get("city")?.slice(0, 60) ?? "";
+    const message = q.get("message")?.slice(0, 500) ?? "";
+    if (city || message) setValues((v) => ({ ...v, city: city || v.city, message: message || v.message }));
+  }, []);
 
   const set = (key: TextKey | "service" | "message") =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {

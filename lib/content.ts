@@ -12,11 +12,6 @@ export const brand = {
   tagline: ["Good energy", "For a brighter everyday"],
 };
 
-export const currency = {
-  locale: "en-PK",
-  symbol: "Rs",
-};
-
 export const images = {
   // Transparent, trimmed version of /images/logo.webp (white background removed).
   logo: { src: "/images/logo-mark.png", width: 172, height: 88 },
@@ -160,37 +155,6 @@ export const process = {
     { n: "04", title: "Monitor & save", text: "See what you generate and make every sunny day count" },
   ],
 };
-
-export const estimator = {
-  eyebrow: "Your roof has potential",
-  title: { lines: ["See the sunny", "side of your "], accent: "bill" },
-  label: "Your monthly electricity bill",
-  min: 5000,
-  max: 150000,
-  step: 1000,
-  defaultBill: 40000,
-  card: {
-    title: "Your solar snapshot",
-    system: "Recommended system size",
-    savings: "Estimated yearly savings",
-    co2: "Estimated CO₂ avoided per year",
-    cta: { label: "Let’s explore your roof", href: "#quote" },
-  },
-  note: "Based on Rs 50 per unit, 4.5 sun hours a day and 90% bill savings. Your free roof assessment confirms the exact figures for your home or site.",
-};
-
-export function estimate(bill: number) {
-  const units = bill / 50;
-  const systemKw = Math.max(1, Math.round((units / 135) * 10) / 10);
-  const yearlySavings = Math.round((bill * 12 * 0.9) / 1000) * 1000;
-  const co2Tons = ((systemKw * 135 * 12 * 0.45) / 1000).toFixed(1);
-  return { units, systemKw, yearlySavings, co2Tons };
-}
-
-const numberFormat = new Intl.NumberFormat(currency.locale, { maximumFractionDigits: 0 });
-export function formatMoney(n: number) {
-  return `${currency.symbol} ${numberFormat.format(n)}`;
-}
 
 export const benefits = {
   eyebrow: "More than lower bills",
@@ -510,7 +474,7 @@ const usdFormat = new Intl.NumberFormat(usd.locale, { style: "currency", currenc
 export function formatUsd(n: number) {
   return usdFormat.format(n);
 }
-// Monthly units a system produces (~135 kWh per kW, same as the savings estimator).
+// Monthly units a system produces (~135 kWh per kW).
 export function unitsForKw(kw: number) {
   return kw * 135;
 }

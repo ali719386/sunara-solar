@@ -4,18 +4,13 @@ import { Button } from "./Button";
 import { WhatsAppIcon } from "./WhatsAppIcon";
 
 /**
- * Floating WhatsApp button (all screens) plus a sticky quote/WhatsApp bar on phones.
- * The floating button sits above the bar on mobile; the bar respects the safe area.
+ * Sticky quote/WhatsApp bar on phones. The floating WhatsApp button now lives in the
+ * chat dock (ChatWidget), which sits above this bar; the bar respects the safe area.
  */
 export function WhatsAppDock() {
   const href = whatsappUrl();
   return (
     <>
-      {href && (
-        <a href={href} target="_blank" rel="noopener noreferrer" className="wa-float" aria-label={whatsapp.chat}>
-          <WhatsAppIcon size={28} />
-        </a>
-      )}
       <div className="wa-bar">
         <Button href={whatsapp.stickyQuote.href} className="wa-bar-btn">
           {whatsapp.stickyQuote.label}

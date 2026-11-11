@@ -4,7 +4,7 @@ import { IntroStrip } from "@/components/IntroStrip";
 import { About } from "@/components/About";
 import { Solutions } from "@/components/Solutions";
 import { Process } from "@/components/Process";
-import { Estimator } from "@/components/Estimator";
+import { SolarCalculator } from "@/components/SolarCalculator";
 import { Benefits } from "@/components/Benefits";
 import { Emi } from "@/components/Emi";
 import { Testimonial } from "@/components/Testimonial";
@@ -34,7 +34,7 @@ export default function Home() {
       <About />
       <Solutions />
       <Process />
-      <Estimator />
+      <SolarCalculator />
       <Benefits />
       <Emi />
       <Testimonial />

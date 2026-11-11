@@ -4,6 +4,7 @@ import "./globals.css";
 import { MotionProvider } from "@/components/MotionProvider";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { ChatWidget } from "@/components/ChatWidget";
 
 const anton = Anton({ weight: "400", subsets: ["latin"], variable: "--font-anton", display: "swap" });
 const inter = Inter({ weight: ["400", "500", "600"], subsets: ["latin"], variable: "--font-inter", display: "swap" });
@@ -51,6 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Navbar />
           {children}
           <Footer />
+          <ChatWidget />
         </MotionProvider>
       </body>
     </html>
