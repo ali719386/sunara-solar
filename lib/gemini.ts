@@ -15,9 +15,10 @@ export function gemini() {
 }
 
 /**
- * Light thinking keeps short answers fast and leaves the output budget for the reply itself.
- * Remove thinkingConfig if you switch GEMINI_MODEL to a model that does not support thinking levels.
+ * Minimal thinking makes the first words arrive fastest, which matters most for a chat widget.
+ * If answers feel too shallow, try ThinkingLevel.LOW. Remove thinkingConfig if you switch
+ * GEMINI_MODEL to a model that does not support thinking levels.
  */
 export const baseConfig: GenerateContentConfig = {
-  thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
+  thinkingConfig: { thinkingLevel: ThinkingLevel.MINIMAL },
 };

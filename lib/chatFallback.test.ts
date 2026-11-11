@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { detectLang, estimateText, fallbackReply, hasBuyingIntent } from "./chatFallback";
+import { detectLang, estimateText, fallbackReply, hasBuyingIntent, isSmallTalk } from "./chatFallback";
 import { estimateFor } from "./solarCalc";
 
 describe("detectLang", () => {
@@ -89,6 +89,20 @@ describe("fallbackReply", () => {
   it("uses no em dashes in any reply", () => {
     const inputs = ["hi", "salam", "panels", "pros", "net metering", "hybrid", "emi", "warranty", "cleaning", "hours", "contact", "packages", "price", "quote", "random"];
     for (const i of inputs) expect(fallbackReply(i).text).not.toMatch(/—/);
+  });
+});
+
+describe("isSmallTalk", () => {
+  it("spots messages that are only greetings, how are you, thanks or ok", () => {
+    for (const t of ["hi", "Hello!", "salam", "Assalam o alaikum", "kia haal h", "hi, how are you?", "thanks", "ok", "السلام علیکم", "کیا حال ہے؟"]) {
+      expect(isSmallTalk(t)).toBe(true);
+    }
+  });
+
+  it("sends real questions to the AI, even when they start with a greeting", () => {
+    for (const t of ["salam! net metering kya hai?", "hi, how many panels do I need?", "what is net metering", "ok so what about batteries", "سولر پینل کیا ہے"]) {
+      expect(isSmallTalk(t)).toBe(false);
+    }
   });
 });
 

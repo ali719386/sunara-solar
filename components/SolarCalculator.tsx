@@ -5,10 +5,10 @@ import { AlertTriangle, ChevronDown, Sparkles } from "lucide-react";
 import {
   currencies,
   currencyCodes,
+  currencyForLocation,
   defaultLocation,
   findPreset,
   inputLimits,
-  locationSuggestions,
   solarConstants,
   type CurrencyCode,
   type Preset,
@@ -19,6 +19,9 @@ import { Accent } from "./Accent";
 import { Button } from "./Button";
 import { WhatsAppButton } from "./WhatsAppButton";
 import { useMotion } from "./MotionProvider";
+import { LocationCombobox } from "./LocationCombobox";
+import { findUsState, US_DATA_YEAR, type UsState } from "@/lib/usStates";
+import { StateSunIntensity } from "./StateSunIntensity";
 
 const ROOF_CELLS = 40;
 const wholeNumber = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
@@ -170,17 +173,24 @@ function TypedText({ text }: { text: string }) {
 
 type Hint = { kind: "preset" | "none"; text: string } | null;
 
+/** A state's EIA average bill, rounded to whole dollars and kept inside the USD slider range. */
+function stateBill(s: UsState) {
+  const { min, max } = currencies.USD.bill;
+  return clamp(Math.round(s.bill), min, max);
+}
+
 export function SolarCalculator() {
   const id = useId();
   const initial = findPreset(defaultLocation.name) as Preset;
+  const initialState = findUsState(defaultLocation.name);
 
   const [location, setLocation] = useState(defaultLocation.name);
   const [preset, setPreset] = useState<Preset | undefined>(initial);
   const [currency, setCurrency] = useState<CurrencyCode>(initial.currency);
-  const [rate, setRate] = useState(String(initial.rate));
-  const [sun, setSun] = useState(String(initial.sunHours));
+  const [rate, setRate] = useState(String(initialState?.rate ?? initial.rate));
+  const [sun, setSun] = useState(String(initialState?.sunHours ?? initial.sunHours));
   const [roof, setRoof] = useState(inputLimits.roof.default);
-  const [bill, setBill] = useState(currencies[initial.currency].bill.default);
+  const [bill, setBill] = useState(initialState ? stateBill(initialState) : currencies[initial.currency].bill.default);
   const [hint, setHint] = useState<Hint>(null);
 
   const cur = currencies[currency];
@@ -209,6 +219,21 @@ export function SolarCalculator() {
 
   const changeLocation = (value: string) => {
     setLocation(value);
+    // A US state: that state's own EIA rate and average bill, and its sun hours.
+    const state = findUsState(value);
+    if (state) {
+      const statePreset = findPreset(state.name);
+      setPreset(statePreset?.currency === "USD" ? statePreset : undefined);
+      setCurrency("USD");
+      setRate(String(state.rate));
+      setSun(String(state.sunHours));
+      setBill(stateBill(state));
+      setHint({
+        kind: "preset",
+        text: `${state.name} averages loaded (EIA ${US_DATA_YEAR}): $${state.rate.toFixed(4)} per kWh, $${state.bill.toFixed(2)} average monthly bill, ${state.sunHours} peak sun hours. You can edit them below.`,
+      });
+      return;
+    }
     const match = findPreset(value);
     if (match) {
       if (match !== preset) {
@@ -220,9 +245,22 @@ export function SolarCalculator() {
       setHint({ kind: "preset", text: `Typical rates loaded for ${value.trim()}. You can edit them below.` });
     } else {
       setPreset(undefined);
+      // A known country without a preset (e.g. "Ohio, United States") still sets its currency,
+      // with that currency's typical rate, so a PKR rate is never applied to a USD bill.
+      const cur = currencyForLocation(value);
+      if (cur && cur !== currency) {
+        changeCurrency(cur);
+        setRate(String(currencies[cur].defaultRate));
+        setSun(String(solarConstants.defaultSunHours));
+        setHint({ kind: "none", text: `No preset for this place, so typical ${cur} rates are used. Enter your local rate and sun hours below.` });
+        return;
+      }
       setHint(value.trim() ? { kind: "none", text: "No preset for this place. Enter your local rate and sun hours below." } : null);
     }
   };
+
+  // The state picked in Location (if any); its sun intensity card shows under the field.
+  const usState = findUsState(location);
 
   const commitRate = () => setRate(trimNumber(clamp(parse(rate, inputLimits.rate.min), inputLimits.rate.min, inputLimits.rate.max)));
   const commitSun = () => setSun(trimNumber(sunNum));
@@ -300,30 +338,21 @@ export function SolarCalculator() {
 
           <div className="calc-field">
             <label htmlFor={`${id}-loc`}>Location</label>
-            <div className="calc-input">
-              <input
-                id={`${id}-loc`}
-                type="text"
-                autoComplete="address-level1"
-                list={`${id}-places`}
-                placeholder="State, city or country"
-                value={location}
-                maxLength={60}
-                onChange={(e) => changeLocation(e.target.value)}
-                aria-describedby={hint ? `${id}-hint` : undefined}
-              />
-            </div>
-            <datalist id={`${id}-places`}>
-              {locationSuggestions.map((s) => (
-                <option key={s} value={s} />
-              ))}
-            </datalist>
+            <LocationCombobox
+              id={`${id}-loc`}
+              value={location}
+              onChange={changeLocation}
+              placeholder="Choose a US state"
+              describedBy={hint ? `${id}-hint` : undefined}
+            />
             {hint && (
               <p id={`${id}-hint`} className={`calc-hint is-${hint.kind}`} role="status">
                 {hint.text}
               </p>
             )}
           </div>
+
+          {usState && <StateSunIntensity state={usState} />}
 
           <div className="calc-row">
             <div className="calc-field">
@@ -444,18 +473,6 @@ export function SolarCalculator() {
               <dt>Yearly savings</dt>
               <dd>
                 <Tween value={r.yearlySavings} format={money} />
-              </dd>
-            </div>
-            <div>
-              <dt>Payback</dt>
-              <dd>
-                {r.paybackYears > 0 ? <Tween value={r.paybackYears} format={(n) => `${n.toFixed(1)} yrs`} /> : "n/a"}
-              </dd>
-            </div>
-            <div>
-              <dt>Estimated system cost</dt>
-              <dd>
-                <Tween value={r.estimatedCost} format={money} />
               </dd>
             </div>
             <div>

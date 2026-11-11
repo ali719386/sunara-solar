@@ -188,9 +188,9 @@ export const emi = {
   button: { label: "Check my installment", href: "#quote" },
   example: {
     label: "Example: 10 kW system over 24 months",
-    value: "Rs 60,400",
+    value: "$215",
     unit: "/ month",
-    note: "Compared with an average bill of Rs 70,000 a month.",
+    note: "Compared with an average bill of $250 a month.",
   },
 };
 
@@ -202,24 +202,24 @@ export const testimonials = {
   billLabel: { before: "Bill before", after: "Bill after" },
   items: [
     {
-      before: "Rs 65,000",
-      after: "Rs 12,000",
+      before: "$230",
+      after: "$45",
       quote: "The team was precise, fast and spotless. Our bill dropped by more than half in the first month.",
       name: "Usman Tariq",
       city: "Faisalabad",
       system: "8 kW home",
     },
     {
-      before: "Rs 120,000",
-      after: "Rs 18,000",
+      before: "$430",
+      after: "$65",
       quote: "They handled net metering from start to finish. We only signed and waited.",
       name: "Dr. Ayesha Malik",
       city: "Lahore",
       system: "25 kW clinic",
     },
     {
-      before: "Rs 48,000",
-      after: "Rs 5,500",
+      before: "$170",
+      after: "$20",
       quote: "Monitoring on my phone shows exactly what I save. Support answered the same day.",
       name: "Hamza Raza",
       city: "Faisalabad",

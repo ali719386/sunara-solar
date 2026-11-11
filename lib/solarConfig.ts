@@ -124,9 +124,46 @@ export const tips: Record<TipKey, string> = {
 
 export const defaultLocation ={ name: "California", currency: "USD" as CurrencyCode };
 
-/** Lowercase exact keyword match; returns undefined when the place has no preset. */
+/** Parts of "Punjab, Pakistan", most specific first: ["punjab, pakistan", "punjab", "pakistan"]. */
+function locationKeys(location: string) {
+  const full = location.trim().toLowerCase();
+  if (!full) return [];
+  const parts = full.split(",").map((p) => p.trim()).filter(Boolean);
+  return [...new Set([full, ...parts])];
+}
+
+/**
+ * Lowercase exact keyword match on the whole text or on any comma separated part, most specific
+ * first, so "California, United States" finds California and "Sindh, Pakistan" finds Pakistan.
+ * Returns undefined when the place has no preset.
+ */
 export function findPreset(location: string): Preset | undefined {
-  const key = location.trim().toLowerCase();
-  if (!key) return undefined;
-  return presets.find((p) => p.keywords.includes(key) || p.name.toLowerCase() === key);
+  for (const key of locationKeys(location)) {
+    const hit = presets.find((p) => p.keywords.includes(key) || p.name.toLowerCase() === key);
+    if (hit) return hit;
+  }
+  return undefined;
+}
+
+/** Eurozone countries, so any of them switches the calculator to EUR. */
+const EURO_COUNTRIES = [
+  "austria", "belgium", "croatia", "cyprus", "estonia", "finland", "france", "germany", "greece", "ireland",
+  "italy", "latvia", "lithuania", "luxembourg", "malta", "netherlands", "portugal", "slovakia", "slovenia", "spain",
+];
+const COUNTRY_CURRENCY: Record<string, CurrencyCode> = {
+  "united states": "USD", usa: "USD", us: "USD", america: "USD",
+  "united kingdom": "GBP", uk: "GBP", england: "GBP", scotland: "GBP", wales: "GBP",
+  australia: "AUD",
+  "united arab emirates": "AED", uae: "AED",
+  pakistan: "PKR",
+  india: "INR",
+  ...Object.fromEntries(EURO_COUNTRIES.map((c) => [c, "EUR" as const])),
+};
+
+/** Currency for a place without a preset, e.g. "Ohio, United States" gives USD. */
+export function currencyForLocation(location: string): CurrencyCode | undefined {
+  for (const key of locationKeys(location).reverse()) {
+    if (COUNTRY_CURRENCY[key]) return COUNTRY_CURRENCY[key];
+  }
+  return undefined;
 }

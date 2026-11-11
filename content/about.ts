@@ -33,13 +33,13 @@ export const aboutContent = {
     title: "Built on doing",
     accent: "the job right",
     text: "Too many solar systems are installed and then forgotten, slowly losing output to dust, loose wiring and faults nobody notices. We started SUNARA to fix that. We look after everything ourselves, from design and installation to cleaning, monitoring and repairs, so you always know who to call.",
-    // TODO: verify founder name, role and quote. Add a photo path (e.g. "/images/founder.webp") when available.
+    // TODO: verify founder role and quote. Add a photo path (e.g. "/images/founder.webp") when available.
     founder: {
-      name: "Founder name",
+      name: "James Robert",
       role: "Founder and Managing Director",
       quote: "We only put our name on systems we would be proud to look after for the next 25 years.",
       photo: "",
-      initials: "SN",
+      initials: "JR",
     },
   },
 
@@ -79,6 +79,9 @@ export const aboutContent = {
     warranty: { value: "25 yr", label: "Panel performance warranty", text: "Backed by the manufacturer and supported by our team" },
     partnersTitle: "Equipment partners",
     partnersText: "We install tier one equipment from brands we trust",
+    // The list itself comes from the packages page (packagesPage.compare.features), so both stay in sync.
+    includesTitle: "Every system includes",
+    includesLink: { label: "Compare packages", href: "/packages" },
     // TODO: confirm partner brands. Add a logo path (e.g. "/images/partners/jinko.svg") once real logos are approved.
     partners: [
       { name: "Jinko", logo: "" },

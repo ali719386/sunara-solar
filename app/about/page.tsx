@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { BadgeCheck, Check, Clock, FileText, MapPin, Minus, ShieldCheck, X, Zap } from "lucide-react";
 import { aboutContent as c, env } from "@/content/about";
-import { brand, images } from "@/lib/content";
+import { brand, images, packagesPage } from "@/lib/content";
 import { PageShell } from "@/components/PageShell";
 import { PageHero } from "@/components/PageHero";
 import { Eyebrow } from "@/components/Eyebrow";
@@ -183,7 +184,7 @@ export default function AboutPage() {
               </div>
             </div>
           </div>
-          <div className="abx-panel" data-reveal style={delay(120)}>
+          <div className="abx-panel abx-panel-partners" data-reveal style={delay(120)}>
             <h3 className="abx-h3">{trust.partnersTitle}</h3>
             <p className="abx-small">{trust.partnersText}</p>
             <ul className="abx-logos">
@@ -193,6 +194,23 @@ export default function AboutPage() {
                 </li>
               ))}
             </ul>
+            <div className="abx-includes">
+              <p className="abx-includes-title">
+                <Zap size={18} aria-hidden="true" />
+                {trust.includesTitle}
+              </p>
+              <ul className="abx-includes-list">
+                {packagesPage.compare.features.map((f) => (
+                  <li key={f}>
+                    <Check size={16} strokeWidth={2.6} aria-hidden="true" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Link href={trust.includesLink.href} className="abx-includes-link">
+                {trust.includesLink.label} <span aria-hidden="true">→</span>
+              </Link>
+            </div>
           </div>
         </div>
       </section>

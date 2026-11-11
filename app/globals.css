@@ -902,7 +902,6 @@ a {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  min-height: 270px;
   padding: 28px;
   border-radius: 24px;
   background: var(--card);
@@ -932,7 +931,6 @@ a {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: auto;
 }
 .process-num {
   font-family: var(--font-num);
@@ -954,7 +952,7 @@ a {
   color: var(--accent-text);
 }
 .process-title {
-  margin: 36px 0 8px;
+  margin: 22px 0 8px;
   font-size: 19px;
   font-weight: 600;
   letter-spacing: -0.02em;
@@ -3369,7 +3367,6 @@ html[data-motion="off"] *::after {
     gap: 12px;
   }
   .process-card {
-    min-height: 230px;
     padding: 20px;
     border-radius: 20px;
   }
@@ -3377,7 +3374,7 @@ html[data-motion="off"] *::after {
     font-size: 48px;
   }
   .process-title {
-    margin-top: 26px;
+    margin-top: 16px;
     font-size: 17px;
   }
   .process-text {
@@ -5987,4 +5984,367 @@ html[data-motion="on"] .chat-thread {
 .chat-new.is-compact {
   width: 36px;
   padding: 0;
+}
+
+/* Location field with a country and state list (calculator). */
+.loc-combo {
+  position: relative;
+}
+.loc-pin {
+  flex: none;
+  margin-left: 14px;
+  color: var(--muted);
+}
+.loc-combo .calc-input input {
+  padding-left: 8px;
+}
+.loc-toggle {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-right: 4px;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+.loc-toggle svg {
+  transition: transform 0.25s var(--ease);
+}
+.loc-combo.is-open .loc-toggle svg {
+  transform: rotate(180deg);
+}
+.loc-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  max-height: 300px;
+  margin: 0;
+  padding: 0 6px 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: var(--shadow-md);
+}
+html[data-motion="on"] .loc-list {
+  animation: chatMsgIn 0.2s var(--ease);
+}
+.loc-group {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 10px 10px 6px;
+  background: var(--card);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+.loc-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  font-size: 14.5px;
+  color: var(--text);
+  cursor: pointer;
+}
+.loc-option.is-active {
+  background: var(--accent-soft);
+}
+.loc-option.is-country .loc-label {
+  font-weight: 600;
+}
+.loc-detail {
+  flex: none;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.loc-note {
+  padding: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+@media (prefers-reduced-motion: reduce) {
+  .loc-list {
+    animation: none;
+  }
+  .loc-toggle svg {
+    transition: none;
+  }
+}
+
+/* About > Equipment partners: "Every system includes" fills the panel down to the warranty's level. */
+.abx-panel-partners {
+  grid-template-rows: auto auto auto 1fr;
+}
+.abx-includes {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  margin-top: 6px;
+  padding: 20px 22px;
+  border-radius: 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+.abx-includes-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-weight: 600;
+  color: var(--text);
+}
+.abx-includes-title svg {
+  color: var(--accent-text);
+}
+.abx-includes-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.abx-includes-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.abx-includes-list svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent-text);
+}
+.abx-includes-link {
+  justify-self: start;
+  margin-top: 2px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-text);
+}
+.abx-includes-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+@media (max-width: 560px) {
+  .abx-includes-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Calculator: sun intensity card for the chosen US state. */
+.sun-chart {
+  margin: 4px 0 18px;
+  padding: 16px 18px 14px;
+  border-radius: 18px;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+.sun-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-text);
+}
+.sun-chart-title {
+  flex: 1;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+.sun-level {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-size: 12px;
+  font-weight: 600;
+}
+.sun-big {
+  margin: 10px 0 12px;
+  font-family: var(--font-num);
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--text);
+}
+.sun-big span {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--muted);
+}
+/* Where the state sits between the least and most sunny US states. */
+.sun-meter {
+  position: relative;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--border), var(--accent));
+}
+.sun-meter-dot {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 3px solid var(--btn);
+  transform: translate(-50%, -50%);
+  transition: left 0.5s var(--ease);
+}
+.sun-meter-scale {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 6px;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.sun-chart-note {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.sun-months {
+  margin: 16px 0 0;
+}
+.sun-months-title {
+  margin: 0 0 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+.sun-bars {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 2px;
+  height: 96px;
+  align-items: end;
+  border-bottom: 1px solid var(--border);
+}
+.sun-bar-col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+}
+.sun-bar {
+  width: 70%;
+  max-width: 18px;
+  border-radius: 4px 4px 0 0;
+  background: var(--accent);
+  transition: height 0.5s var(--ease), opacity 0.2s ease;
+}
+.sun-bar-col:hover .sun-bar {
+  opacity: 0.75;
+}
+.sun-bar-value {
+  margin-bottom: 3px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+.sun-bar-month {
+  position: absolute;
+  bottom: -18px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.sun-bar-tip {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  z-index: 2;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 12px;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.sun-bar-col:hover .sun-bar-tip {
+  opacity: 1;
+}
+.sun-source {
+  margin: 26px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.sun-source a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sun-bar,
+  .sun-bar-tip,
+  .sun-meter-dot {
+    transition: none;
+  }
+}
+
+/* ───────────────────────── Smooth scrolling ─────────────────────────
+   Fixed elements with backdrop-filter make the browser re-blur everything behind them on
+   every scroll frame, which is the main cause of scroll stutter over photos and video.
+   A lighter blur without saturate(), on a slightly more solid fill, keeps the same glass look
+   for a fraction of the cost. Blurs over images inside the page (solution labels) and on the
+   phone bar are replaced by solid fills. */
+:root,
+[data-theme="light"] {
+  --glass: rgba(255, 255, 255, 0.92);
+}
+[data-theme="dark"] {
+  --glass: rgba(23, 26, 32, 0.92);
+}
+.glass,
+.nav,
+.nav-dropdown {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.solution-label {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: rgba(0, 0, 0, 0.42);
+}
+@media (max-width: 760px) {
+  .glass,
+  .nav,
+  .nav-dropdown {
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+  .wa-bar {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--glass);
+  }
+}
+/* Keep fixed bars on their own GPU layer so the page scrolls under them without repainting them. */
+.nav-wrap,
+.chat-dock,
+.progress-bar {
+  backface-visibility: hidden;
 }

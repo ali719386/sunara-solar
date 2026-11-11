@@ -163,6 +163,30 @@ const SIZING =
 const SOLAR_TOPIC = /\b(solar|panels?|inverter|plates?)\b|سولر|پینل/;
 
 /** Picks a local reply for the user's latest message. */
+// Words that make up greetings, "how are you", thanks and "ok" in English and Roman Urdu.
+const SMALL_TALK_WORDS = new Set(
+  (
+    "hi hii hiii hello helo hey heya hiya yo salam salaam slam assalam asalam assalamu assalamualaikum aoa o u alaikum alaykum " +
+    "walaikum wa good morning afternoon evening there sunara assistant bot sir bhai bro dear " +
+    "how are r you doing whats up sup kia kya ky haal hal h hai hy he aap ap kaise kese kaisay ho hain hon sab theek thik " +
+    "ok okay okk k kk fine great nice cool alright sure thanks thank thx shukriya shukria jazakallah acha achha accha ji g haan han"
+  ).split(" ")
+);
+const URDU_SMALL_TALK = /^(السلام|وعلیکم|علیکم|سلام|ہیلو|آداب|کیا|حال|ہے|ہیں|آپ|کیسے|شکریہ|ٹھیک|اچھا|جی|\s|[؟!۔،.?!,])+$/;
+
+/**
+ * True when the whole message is only a greeting, "how are you", thanks or "ok". Those get an
+ * instant local reply instead of waiting for the AI. "salam! net metering kya hai?" is not small talk.
+ */
+export function isSmallTalk(input: string) {
+  const text = input.trim().toLowerCase();
+  if (!text || text.length > 60) return false;
+  if (URDU_SMALL_TALK.test(text)) return true;
+  if (URDU_SCRIPT.test(text)) return false;
+  const words = text.replace(/[^a-z\s]/g, " ").split(/\s+/).filter(Boolean);
+  return words.length > 0 && words.length <= 8 && words.every((w) => SMALL_TALK_WORDS.has(w));
+}
+
 export function fallbackReply(input: string): FallbackReply {
   const text = input.trim().toLowerCase();
   const lang = detectLang(input);

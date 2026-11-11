@@ -3,7 +3,7 @@
 import { Fragment, useCallback, useEffect, useId, useRef, useState } from "react";
 import { ArrowLeft, MessagesSquare, Plus, SendHorizontal, Trash2, X } from "lucide-react";
 import { CHAT_ERROR_SENTINEL, CHAT_LIMITS } from "@/lib/chatValidation";
-import { detectLang, estimateText, fallbackReply, hasBuyingIntent, type FallbackAction } from "@/lib/chatFallback";
+import { detectLang, estimateText, fallbackReply, hasBuyingIntent, isSmallTalk, type FallbackAction } from "@/lib/chatFallback";
 import { estimateFor } from "@/lib/solarCalc";
 import { currencies, currencyCodes, findPreset, locationSuggestions, type CurrencyCode } from "@/lib/solarConfig";
 import { whatsappUrl } from "@/lib/whatsapp";
@@ -42,6 +42,9 @@ const BUSY_TEXT = "I’m getting a lot of questions right now. Please try again 
 const PHONE_RE = /^[+\d][\d\s-]{6,}$/;
 
 let aiAvailable: boolean | null = null; // cached for the page session
+/** After a failed AI reply, answer locally for a minute instead of waiting on the AI again. */
+const AI_PAUSE_MS = 60_000;
+let aiPausedUntil = 0;
 const uid = newId;
 const activeMessages = (store: ChatStore) => store.threads.find((t) => t.id === store.activeId)?.messages ?? [GREETING];
 
@@ -140,7 +143,7 @@ function Markdown({ text }: { text: string }) {
 function EstimateForm({ onDone }: { onDone: (summary: string, reply: string) => void }) {
   const id = useId();
   const [location, setLocation] = useState("");
-  const [currency, setCurrency] = useState<CurrencyCode>("PKR");
+  const [currency, setCurrency] = useState<CurrencyCode>("USD");
   const [bill, setBill] = useState("");
   const [roof, setRoof] = useState("1500");
   const [error, setError] = useState("");
@@ -338,7 +341,7 @@ export default function ChatPanel({ open, onClose, icon }: { open: boolean; onCl
           window.clearInterval(t);
           return resolve();
         }
-        n = Math.min(text.length, n + 4);
+        n = Math.min(text.length, n + 7);
         update(id, text.slice(0, n));
         if (n >= text.length) {
           window.clearInterval(t);
@@ -410,13 +413,20 @@ export default function ChatPanel({ open, onClose, icon }: { open: boolean; onCl
     const moved = () => activeRef.current !== chatId;
 
     const local = fallbackReply(text);
+    // Greetings, thanks and "ok" are answered at once, and so is everything while the AI is
+    // paused after a failure, so visitors never wait on a slow or out of quota AI for those.
+    const instant = isSmallTalk(text) || Date.now() < aiPausedUntil;
     let outcome: "ok" | "busy" | "fail" = "fail";
-    if (ai !== false) outcome = await askApi(history);
+    if (ai !== false && !instant) {
+      outcome = await askApi(history);
+      if (outcome !== "ok") aiPausedUntil = Date.now() + AI_PAUSE_MS;
+    }
     if (moved()) return;
 
     if (outcome === "busy") await typeOut(BUSY_TEXT);
     else if (outcome === "fail") {
-      await new Promise((r) => setTimeout(r, motion ? 450 : 0));
+      // A short typing pause for instant replies only; after a failed AI call the visitor already waited.
+      if (instant && motion) await new Promise((r) => setTimeout(r, 250));
       await typeOut(local.text);
       if (moved()) return;
       if (local.action) addForm(local.action);

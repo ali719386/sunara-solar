@@ -12,6 +12,8 @@ export const runtime = "nodejs";
 // Gemini's thinking tokens count toward this limit too; the prompt keeps replies under 120 words.
 const MAX_OUTPUT_TOKENS = 1500;
 const TIMEOUT_MS = 15_000;
+/** Give up early when Gemini has not started answering (or asked for the estimate tool) by then. */
+const FIRST_TOKEN_MS = 8_000;
 const MAX_TOOL_ROUNDS = 3;
 
 const SYSTEM_PROMPT = `You are SUNARA Assistant, a friendly, concise solar advisor for SUNARA, a solar company in Pakistan.
@@ -19,6 +21,7 @@ const SYSTEM_PROMPT = `You are SUNARA Assistant, a friendly, concise solar advis
 Rules:
 - Use ONLY the knowledge base below and the estimate_solar tool results for company facts. If something is not in the knowledge base (exact prices, stock, delivery dates, legal or tax advice), say you are not sure and offer the free roof assessment or WhatsApp.
 - Never invent numbers, never guarantee savings, never promise subsidies or incentives.
+- Talk about bills, savings and prices in US dollars (USD) unless the user clearly uses another currency.
 - Stay on topic (solar, energy, SUNARA). Politely decline unrelated requests. Small talk such as "how are you" is fine: answer briefly and steer back to solar.
 - Be honest about cons. Do not oversell.
 - Ask at most one question at a time.
@@ -39,7 +42,7 @@ const ESTIMATE_TOOL: FunctionDeclaration = {
     type: "object",
     properties: {
       location: { type: "string", description: "City, state or country, e.g. Lahore" },
-      currency: { type: "string", enum: currencyCodes, description: "Currency of the bill. PKR for Pakistan." },
+      currency: { type: "string", enum: currencyCodes, description: "Currency of the bill. USD unless the user clearly uses another currency." },
       monthlyBill: { type: "number", description: "Average monthly electricity bill in that currency" },
       roofSqFt: { type: "number", description: "Roof area in square feet (300 to 6000)" },
       ratePerKwh: { type: "number", description: "Optional electricity rate per kWh, if the user gave it" },
@@ -54,7 +57,7 @@ function runEstimate(input: unknown) {
   const i = (input && typeof input === "object" ? input : {}) as Record<string, unknown>;
   const currency = (typeof i.currency === "string" && i.currency.toUpperCase() in currencies
     ? i.currency.toUpperCase()
-    : "PKR") as CurrencyCode;
+    : "USD") as CurrencyCode;
   const n = (v: unknown) => (typeof v === "number" && Number.isFinite(v) ? v : Number(v) || 0);
   const e = estimateFor({
     location: typeof i.location === "string" ? i.location : "",
@@ -112,8 +115,11 @@ export async function POST(req: Request) {
     parts: [{ text: m.content }],
   }));
 
-  // Stop on whichever comes first: the visitor leaving (request aborted) or the 15 second timeout.
-  const signal = AbortSignal.any([req.signal, AbortSignal.timeout(TIMEOUT_MS)]);
+  // Stop on whichever comes first: the visitor leaving (request aborted), the 15 second limit,
+  // or no progress within FIRST_TOKEN_MS (so the widget answers locally instead of waiting).
+  const stalled = new AbortController();
+  const stallTimer = setTimeout(() => stalled.abort(), FIRST_TOKEN_MS);
+  const signal = AbortSignal.any([req.signal, AbortSignal.timeout(TIMEOUT_MS), stalled.signal]);
   const encoder = new TextEncoder();
 
   const body = new ReadableStream<Uint8Array>({
@@ -121,6 +127,7 @@ export async function POST(req: Request) {
       let sent = false;
       const write = (text: string) => {
         if (!text) return;
+        if (!sent) clearTimeout(stallTimer);
         sent = true;
         controller.enqueue(encoder.encode(text));
       };
@@ -146,8 +153,11 @@ export async function POST(req: Request) {
           for await (const chunk of stream) {
             for (const part of chunk.candidates?.[0]?.content?.parts ?? []) {
               modelParts.push(part);
-              if (part.functionCall) calls.push(part.functionCall);
-              else if (part.text && !part.thought) write(part.text);
+              if (part.functionCall) {
+                // A tool call is progress too; the overall 15 second limit still applies.
+                clearTimeout(stallTimer);
+                calls.push(part.functionCall);
+              } else if (part.text && !part.thought) write(part.text);
             }
           }
 
@@ -169,10 +179,12 @@ export async function POST(req: Request) {
         if (!sent) write(CHAT_ERROR_SENTINEL);
       } catch (error) {
         if (error instanceof ApiError) console.error(`chat: Gemini API error ${error.status}`);
+        else if (stalled.signal.aborted && !sent) console.error(`chat: Gemini did not start answering within ${FIRST_TOKEN_MS / 1000}s`);
         else if (!req.signal.aborted) console.error("chat: request failed", error instanceof Error ? error.name : error);
         if (!sent) write(CHAT_ERROR_SENTINEL);
         else write("\n\nSorry, I lost my connection there. You can ask again, or chat with our team on WhatsApp.");
       } finally {
+        clearTimeout(stallTimer);
         controller.close();
       }
     },
